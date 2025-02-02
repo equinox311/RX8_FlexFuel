@@ -1,0 +1,241 @@
+Archive member included because of file (symbol)
+
+c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\m2a\libgcc.a(_set_fpscr.o)
+                              C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o (__fpscr_values)
+
+Allocating common symbols
+Common symbol       size              file
+
+__fpscr_values      0x8               c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\m2a\libgcc.a(_set_fpscr.o)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+
+Zero            0x0000000000000000       0x3c
+ *(.vects)
+ Zero           0x0000000000000000       0x3c C:\WorkSpace\TEST2\TEST2\Debug\restet_handler.o
+
+INTHanlder
+
+.text           0x0000000000001000       0x1c
+ *(.text)
+ .text          0x0000000000001000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+ .text          0x0000000000001000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\tables_test.o
+ .text          0x0000000000001000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\ROMHolesForCode.o
+ .text          0x0000000000001000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
+ .text          0x0000000000001000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\restet_handler.o
+ .text          0x0000000000001000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\patches.o
+ .text          0x0000000000001000       0x1c c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\m2a\libgcc.a(_set_fpscr.o)
+                0x0000000000001000                __set_fpscr
+ *(.text.*)
+                0x000000000000101c                etext = .
+
+.init
+ *(.init)
+
+.fini
+ *(.fini)
+
+.got
+ *(.got)
+ *(.got.plt)
+
+.rodata         0x000000000000101c        0x0
+ *(.rodata)
+ *(.rodata.*)
+                0x000000000000101c                _erodata = .
+
+.eh_frame_hdr
+ *(.eh_frame_hdr)
+
+.eh_frame
+ *(.eh_frame)
+
+.jcr
+ *(.jcr)
+
+.tors           0x000000000000101c        0x0
+                0x000000000000101c                __CTOR_LIST__ = .
+                0x000000000000101c                ___ctors = .
+ *(.ctors)
+                0x000000000000101c                ___ctors_end = .
+                0x000000000000101c                __CTOR_END__ = .
+                0x000000000000101c                __DTOR_LIST__ = .
+                0x000000000000101c                ___dtors = .
+ *(.dtors)
+                0x000000000000101c                ___dtors_end = .
+                0x000000000000101c                __DTOR_END__ = .
+                0x000000000000101c                _mdata = .
+
+RSTHandler      0x0000000000004000       0x60
+ RSTHandler     0x0000000000004000       0x60 C:\WorkSpace\TEST2\TEST2\Debug\restet_handler.o
+
+beans           0x00000000000120e8        0x4
+ beans          0x00000000000120e8        0x4 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                0x00000000000120e8                timing_adder_trailing_ptr
+
+beans2          0x0000000000012178        0x4
+ beans2         0x0000000000012178        0x4 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                0x0000000000012178                timing_adder_leading_ptr
+
+RomHole_ForCode
+                0x000000000006b914      0x29c
+ *(.rodata)
+ RomHole_ForCode
+                0x000000000006b914      0x288 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                0x000000000006b914                func
+                0x000000000006b964                runFlexFuelCalcs
+                0x000000000006b98c                initFlexFuelCalcs
+                0x000000000006b9d8                getFlexMetrics
+                0x000000000006ba54                calcTimingAdders
+                0x000000000006bb00                applyTimingAdders
+ *fill*         0x000000000006bb9c        0x4 
+ RomHole_ForCode
+                0x000000000006bba0       0x10 C:\WorkSpace\TEST2\TEST2\Debug\ROMHolesForCode.o
+                0x000000000006bba0                EndOfEthanolCode
+
+RomHole_calibrations
+                0x000000000006c07c      0x518
+ RomHole_calibrations
+                0x000000000006c07c        0x8 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                0x000000000006c07c                ethanol_content_sample_thresh_rpm
+                0x000000000006c080                ethanol_content_sample_thresh_load
+ RomHole_calibrations
+                0x000000000006c084      0x510 C:\WorkSpace\TEST2\TEST2\Debug\tables_test.o
+                0x000000000006c084                ethanol_content_to_fuel_air_ratio_table_2d
+                0x000000000006c084                Start_Ethanol_Tables
+                0x000000000006c0f0                ethanol_content_to_timing_mult
+                0x000000000006c15c                timing_ethanol_adder_leading
+                0x000000000006c378                timing_ethanol_adder_trailing
+
+Misc            0x000000000007f9bc       0x5c
+ Misc           0x000000000007f9bc       0x5c C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                0x000000000007f9bc                SetValues
+
+.rela.dyn       0x000000000007fa18        0x0
+ .relaRomHole_ForCode
+                0x0000000000000000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+ .relaMisc      0x0000000000000000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+ .rela.text     0x0000000000000000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+
+.stack          0x0000000073fffbf0        0x0
+                0x0000000073fffbf0                _stack = .
+
+.data           0x00000000ffff6000        0x0 load address 0x000000000000101c
+                0x00000000ffff6000                _data = .
+ *(.data)
+ .data          0x00000000ffff6000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+ .data          0x00000000ffff6000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\tables_test.o
+ .data          0x00000000ffff6000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\ROMHolesForCode.o
+ .data          0x00000000ffff6000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
+ .data          0x00000000ffff6000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\restet_handler.o
+ .data          0x00000000ffff6000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\patches.o
+ .data          0x00000000ffff6000        0x0 c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\m2a\libgcc.a(_set_fpscr.o)
+ *(.data.*)
+                0x00000000ffff6000                _edata = .
+
+.gcc_exc
+ *(.gcc_exc)
+
+.bss            0x00000000ffff6000        0xc load address 0x000000000000101c
+                0x00000000ffff6000                _bss = .
+ *(.bss)
+ .bss           0x00000000ffff6000        0x2 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                0x00000000ffff6000                i
+ .bss           0x00000000ffff6002        0x0 C:\WorkSpace\TEST2\TEST2\Debug\tables_test.o
+ .bss           0x00000000ffff6002        0x0 C:\WorkSpace\TEST2\TEST2\Debug\ROMHolesForCode.o
+ .bss           0x00000000ffff6002        0x0 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
+ .bss           0x00000000ffff6002        0x0 C:\WorkSpace\TEST2\TEST2\Debug\restet_handler.o
+ .bss           0x00000000ffff6002        0x0 C:\WorkSpace\TEST2\TEST2\Debug\patches.o
+ .bss           0x00000000ffff6002        0x0 c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\m2a\libgcc.a(_set_fpscr.o)
+ *(.bss.*)
+ *(COMMON)
+ *fill*         0x00000000ffff6002        0x2 
+ COMMON         0x00000000ffff6004        0x8 c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\m2a\libgcc.a(_set_fpscr.o)
+                0x00000000ffff6004                __fpscr_values
+                0x00000000ffff600c                _ebss = .
+                0x00000000ffff600c                _end = .
+
+RAMHole_forVariables
+                0x00000000ffffd900       0x10
+ RAMHole_forVariables
+                0x00000000ffffd900       0x10 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                0x00000000ffffd900                fuel_air_ratio
+                0x00000000ffffd904                timing_mult
+                0x00000000ffffd908                timing_adder_trailing
+                0x00000000ffffd90c                timing_adder_leading
+LOAD C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+LOAD C:\WorkSpace\TEST2\TEST2\Debug\tables_test.o
+LOAD C:\WorkSpace\TEST2\TEST2\Debug\ROMHolesForCode.o
+LOAD C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
+LOAD C:\WorkSpace\TEST2\TEST2\Debug\restet_handler.o
+LOAD C:\WorkSpace\TEST2\TEST2\Debug\patches.o
+START GROUP
+LOAD C:\WorkSpace\TEST2\TEST2\Debug\libTEST2.a
+LOAD c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\m2a\libgcc-Os-4-200.a
+LOAD c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\m2a\libgcc.a
+END GROUP
+OUTPUT(C:\WorkSpace\TEST2\TEST2\Debug\TEST2.x elf32-sh)
+
+.debug_info     0x0000000000000000      0x34e
+ .debug_info    0x0000000000000000      0x2d2 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+ .debug_info    0x00000000000002d2       0x7c C:\WorkSpace\TEST2\TEST2\Debug\restet_handler.o
+
+.debug_abbrev   0x0000000000000000      0x133
+ .debug_abbrev  0x0000000000000000      0x11f C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+ .debug_abbrev  0x000000000000011f       0x14 C:\WorkSpace\TEST2\TEST2\Debug\restet_handler.o
+
+.debug_loc      0x0000000000000000      0x17c
+ .debug_loc     0x0000000000000000      0x17c C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+
+.debug_aranges  0x0000000000000000       0x70
+ .debug_aranges
+                0x0000000000000000       0x50 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+ .debug_aranges
+                0x0000000000000050       0x20 C:\WorkSpace\TEST2\TEST2\Debug\restet_handler.o
+
+.debug_ranges   0x0000000000000000       0x40
+ .debug_ranges  0x0000000000000000       0x40 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+
+.debug_line     0x0000000000000000      0x120
+ .debug_line    0x0000000000000000       0xa7 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+ .debug_line    0x00000000000000a7       0x79 C:\WorkSpace\TEST2\TEST2\Debug\restet_handler.o
+
+.debug_str      0x0000000000000000      0x2f9
+ .debug_str     0x0000000000000000      0x2f9 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                                        0x305 (size before relaxing)
+
+.comment        0x0000000000000000       0x1c
+ .comment       0x0000000000000000       0x1c C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                                         0x1d (size before relaxing)
+
+.debug_frame    0x0000000000000000       0xe0
+ .debug_frame   0x0000000000000000       0xe0 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+
+
+==============================================================
+
+Listfile generated by KPIT GNUSH [ELF]-v13.01 on Sunday, February 02, 2025, 15:36:36
+
+Build options:
+
+-T "C:\WorkSpace\TEST2\TEST2\Debug\TEST2_Debug_auto.gsi"
+-T "C:\WorkSpace\TEST2\TEST2\Debug\TEST2_input.tmp" 
+-L "c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\m2a"
+-L "C:\WorkSpace\TEST2\TEST2\Debug"
+-Map "C:\WorkSpace\TEST2\TEST2\Debug\TEST2.map"
+--start-group -l "TEST2" -l "gcc-Os-4-200" -l "gcc" --end-group
+-o "C:\WorkSpace\TEST2\TEST2\Debug\TEST2.x"
+-e _ResetHandler
+-N
+INPUT("C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o")
+INPUT("C:\WorkSpace\TEST2\TEST2\Debug\tables_test.o")
+INPUT("C:\WorkSpace\TEST2\TEST2\Debug\ROMHolesForCode.o")
+INPUT("C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o")
+INPUT("C:\WorkSpace\TEST2\TEST2\Debug\restet_handler.o")
+INPUT("C:\WorkSpace\TEST2\TEST2\Debug\patches.o")

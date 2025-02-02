@@ -1,0 +1,4 @@
+"C:\WorkSpace\TEST2\TEST2\lookup3d.s"
+-I "C:\WorkSpace\TEST2\TEST2"
+--gdwarf2
+-o "C:\WorkSpace\TEST2\TEST2\Debug\lookup3d.o"

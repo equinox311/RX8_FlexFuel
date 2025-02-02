@@ -1,0 +1,12 @@
+Name	Value	Address	Type	Scope
+ i	Not available now.			[Current Scope]
+ timing_mult	Not available now.			[Current Scope]
+ fuel_air_ratio	Not available now.			[Current Scope]
+ timing_adder_trailing	Not available now.			[Current Scope]
+ timing_adder_leading	Not available now.			[Current Scope]
+ ethanol_content_sample_thresh_rpm	Not available now.			[Current Scope]
+ ethanol_content_sample_thresh_load	Not available now.			[Current Scope]
+ local_leading_base_post	Not available now.			[Current Scope]
+ local_leading_base_pre	Not available now.			[Current Scope]
+ local_trailing_base_post	Not available now.			[Current Scope]
+ local_trailing_base_pre	Not available now.			[Current Scope]

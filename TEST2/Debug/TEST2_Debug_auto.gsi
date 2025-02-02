@@ -1,0 +1,108 @@
+OUTPUT_ARCH(sh)
+SECTIONS
+{
+	Zero 0x00000000 : AT (0x00000000)
+	{
+		KEEP(*(.vects))
+	}
+	INTHanlder 0x00000100 : AT (0x00000100)
+	{
+	}
+	.text 0x00001000 : AT (0x00001000)
+	{
+		*(.text)
+		*(.text.*)
+		etext = .;
+	}
+	.init :
+	{
+		*(.init)
+	}
+	.fini :
+	{
+		*(.fini)
+	}
+	.got :
+	{
+		*(.got)
+		*(.got.plt)
+	}
+	.rodata :
+	{
+		*(.rodata)
+		*(.rodata.*)
+		_erodata = .;
+	}
+	.eh_frame_hdr :
+	{
+		*(.eh_frame_hdr)
+	}
+	.eh_frame :
+	{
+		*(.eh_frame)
+	}
+	.jcr :
+	{
+		*(.jcr)
+	}
+	.tors :
+	{
+		__CTOR_LIST__ = .;
+		___ctors = .;
+		*(.ctors)
+		___ctors_end = .;
+		__CTOR_END__ = .;
+		__DTOR_LIST__ = .;
+		___dtors = .;
+		*(.dtors)
+		___dtors_end = .;
+		__DTOR_END__ = .;
+		_mdata = .;
+	}
+	RSTHandler 0x00004000 : AT (0x00004000)
+	{
+	}
+	beans 0x000120E8 : AT (0x000120E8)
+	{
+	}
+	beans2 0x00012178 : AT (0x00012178)
+	{
+	}
+	RomHole_ForCode 0x0006B914 : AT (0x0006B914)
+	{
+		*(.rodata)
+	}
+	RomHole_calibrations 0x0006C07C : AT (0x0006C07C)
+	{
+	}
+	Misc 0x0007F9BC : AT (0x0007F9BC)
+	{
+	}
+	.stack 0x73FFFBF0 : AT (0x73FFFBF0)
+	{
+		_stack = .;
+	}
+	.data 0xFFFF6000 : AT (_mdata)
+	{
+		_data = .;
+		*(.data)
+		*(.data.*)
+		_edata = .;
+	}
+	.gcc_exc :
+	{
+		*(.gcc_exc)
+	}
+	.bss :
+	{
+		_bss = .;
+		*(.bss)
+		*(.bss.*)
+		*(COMMON)
+		_ebss = .;
+		_end = .;
+	}
+	RAMHole_forVariables 0xFFFFD900 : AT (0xFFFFD900)
+	{
+	}
+}

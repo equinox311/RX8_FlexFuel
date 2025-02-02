@@ -1,0 +1,59 @@
+#ifndef VARS_H
+#define VARS_H
+
+//Variables from the RX8 Software for use 
+#define engine_speed_rpm            			((float*)0xFFFFB594)
+#define coolant_temp_degC						((float*)0xFFFFA9FC)
+#define engine_load_g_rev						((float*)0xFFFFC0D8)
+#define ethanol_content_pcnt					((float*)0xFFFF6100) //TEST ONLY
+#define relative_manifold_pressure2_kPa			((float*)0xFFFFBE24)
+#define coolant_temp_post_fault_detection_degC	((float*)0xFFFFA9FC)
+#define ignition_leading_base_final_deg			((float*)0xffffa5ec)
+#define ignition_trailing_base_final_deg		((float*)0xffffa5f0)
+
+typedef struct {
+    short ColCount;
+    short RowsCount;
+    float * ColData_ptr;
+    float * RowData_ptr;
+    float * TableData_ptr;
+    int e3DtableDataType;
+    float DataMultipler ;
+    float DataOffset;
+}LookupTable3D_t;
+
+typedef struct {
+    short RowsCount;
+	short e2DtableDataType;
+    float * RowData_ptr;
+    float * TableData_ptr;
+}LookupTable2D_Float_t;
+
+typedef struct {
+    short RowsCount;
+	short e2DtableDataType;
+    float * RowData_ptr;
+    float * TableData_ptr;
+	float DataMultiplier;
+	float DataOffset;
+}LookupTable2D_t;
+
+typedef struct {
+	float fuel_air_ratio;
+}RAMVars;
+
+#define pRamVariables             ((RAMVars*) 0xFFFF6100)
+
+//Defined Tables for Flex fuel
+extern LookupTable3D_t timing_ethanol_adder_leading;
+extern LookupTable3D_t timing_ethanol_adder_trailing;
+extern LookupTable2D_Float_t ethanol_content_to_fuel_air_ratio_table_2d;
+extern LookupTable2D_Float_t ethanol_content_to_timing_mult;
+
+
+extern float Lookup3d(float index_varX,float index_varY,LookupTable3D_t *table_struct);
+extern float Lookup2d(LookupTable2D_Float_t *table_struct2d, float index2d_varX);
+extern void calculateTrailingTimingBase(void);
+extern void calculateLeadingTimingBase(void);
+
+#endif // VARS_H
