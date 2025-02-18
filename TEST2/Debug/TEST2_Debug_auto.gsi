@@ -62,10 +62,37 @@ SECTIONS
 	RSTHandler 0x00004000 : AT (0x00004000)
 	{
 	}
-	beans 0x000120E8 : AT (0x000120E8)
+	kill_1 0x00011166 : AT (0x00011166)
 	{
 	}
-	beans2 0x00012178 : AT (0x00012178)
+	kill_2 0x0001119C : AT (0x0001119C)
+	{
+	}
+	Flex_Init_Address 0x00011340 : AT (0x00011340)
+	{
+	}
+	Flex_Patch2 0x000120D4 : AT (0x000120D4)
+	{
+	}
+	TrailingPointerPatch 0x000120E8 : AT (0x000120E8)
+	{
+	}
+	LeadingPointerPatch 0x00012178 : AT (0x00012178)
+	{
+	}
+	Flex_Patch_Address 0x00014404 : AT (0x00014404)
+	{
+	}
+	Flex_CAN_216_pase_bypass 0x00029784 : AT (0x00029784)
+	{
+	}
+	Flex_CAN_Unpack_Address 0x00029860 : AT (0x00029860)
+	{
+	}
+	Flex_CAN_Unpack_Address_END 0x000298A2 : AT (0x000298A2)
+	{
+	}
+	FlexCANStruct 0x0004BD24 : AT (0x0004BD24)
 	{
 	}
 	RomHole_ForCode 0x0006B914 : AT (0x0006B914)
@@ -75,7 +102,7 @@ SECTIONS
 	RomHole_calibrations 0x0006C07C : AT (0x0006C07C)
 	{
 	}
-	Misc 0x0007F9BC : AT (0x0007F9BC)
+	Misc 0x00080000 : AT (0x00080000)
 	{
 	}
 	.stack 0x73FFFBF0 : AT (0x73FFFBF0)

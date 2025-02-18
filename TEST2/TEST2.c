@@ -15,58 +15,88 @@
 
 
 #define BASE_FUEL_AIR_RATIO			0.07196f
+#define ETHANOL_CONTENT_MIN			0.0f
+#define ETHANOL_CONTENT_MAX			100.0f
 
+//CAN setup
+const CAN_Message_Setup_t flex_can_setup __attribute__ ((section ("FlexCANStruct"))) = {
+	flex_sensor_id,
+	0x1,
+	0x22,
+	0x8,
+	0x0,
+	flex_message_ram_start,
+	0x1000000
+};
+
+//CAN unpack
+void flexCANUnpack(void) __attribute__ ((section ("Flex_CAN_Unpack_Address")));
+
+
+//Inits for flex based vars
 void initFlexFuelCalcs(void) __attribute__ ((section ("RomHole_ForCode")));
+
+//Main for flex based function
 void runFlexFuelCalcs(void) __attribute__ ((section ("RomHole_ForCode")));
+
+//Gets the ethanol content and applies to globals
 void getFlexMetrics(void) __attribute__ ((section ("RomHole_ForCode")));
+
+//Calculates timing adders
 void calcTimingAdders(void) __attribute__ ((section ("RomHole_ForCode")));
-void applyTimingAdders(void) __attribute__ ((section ("RomHole_ForCode")));
+
+
+//Main function for ismulation
+#ifdef NOT_DEBUG
 float func(void) __attribute__ ((section ("RomHole_ForCode")));
+#endif
 
 const float ethanol_content_sample_thresh_rpm __attribute__ ((section ("RomHole_calibrations"))) = 3100.0f;
-const float ethanol_content_sample_thresh_load __attribute__ ((section ("RomHole_calibrations"))) = 0.5f;
+const float ethanol_content_sample_thresh_load __attribute__ ((section ("RomHole_calibrations"))) = 0.750f;
 
-
-unsigned short i = 0;
-
+unsigned short i __attribute__ ((section ("RAMHole_forVariables"))) = 0U;
 
 //TODO: These need to not be random RAM vars
-float fuel_air_ratio __attribute__ ((section ("RAMHole_forVariables"))) = 0.0f;
-float timing_mult  __attribute__ ((section ("RAMHole_forVariables"))) = 0.0f;
-float timing_adder_trailing  __attribute__ ((section ("RAMHole_forVariables"))) = 0.0f;
-float timing_adder_leading  __attribute__ ((section ("RAMHole_forVariables"))) = 0.0f;
+float fuel_air_ratio __attribute__ ((section ("RAMHole_forVariables"))); 
+float timing_mult  __attribute__ ((section ("RAMHole_forVariables")));
+float timing_adder_trailing  __attribute__ ((section ("RAMHole_forVariables")));
+float timing_adder_leading  __attribute__ ((section ("RAMHole_forVariables"))); 
+float ethanol_content_pcnt __attribute__ ((section ("RAMHole_forVariables")));
 
 //Setup patches for new adder pointers 
-long timing_adder_trailing_ptr  __attribute__ ((section ("beans"))) = &timing_adder_trailing;
-long timing_adder_leading_ptr __attribute__ ((section ("beans2")))  = &timing_adder_leading;
+long timing_adder_trailing_ptr  __attribute__ ((section ("TrailingPointerPatch"))) = &timing_adder_trailing;
+long timing_adder_leading_ptr __attribute__ ((section ("LeadingPointerPatch")))  = &timing_adder_leading;
+
+
+#ifdef DEBUG
 
 float func(){
 	
-	initFlexFuelCalcs();
+	
+	highLevelInit();
 	
 	while(1){
-
+		engineControlCalculateTiming();
+		
 		i=i+1;
-
 		if(i >= 255 && i < 256){
 			i=0;
 		}
 		
-		runFlexFuelCalcs();
 	}
 	
 	return 0;
 	
 }
 
+#endif
 
 
 void runFlexFuelCalcs(){
 	
 	getFlexMetrics();
 	calcTimingAdders();
-	applyTimingAdders();
-	
+
 }
 
 
@@ -76,22 +106,64 @@ void initFlexFuelCalcs(){
 	timing_mult = 0.0f;
 	timing_adder_trailing = 0.0f;
 	timing_adder_leading = 0.0f;
+	ethanol_content_pcnt = 15.0f;
 	
 }
 
 void getFlexMetrics(){
 	
-	//if((*engine_speed_rpm > ethanol_content_sample_thresh_rpm) || (*engine_load_g_rev > ethanol_content_sample_thresh_load)){
+	//super bad scud in for right now
+	static float local_etc;
+
+	ethanol_content_pcnt = local_etc;
+	
+	//Set boundries
+	if(ethanol_content_pcnt < ETHANOL_CONTENT_MIN){
+		ethanol_content_pcnt = ETHANOL_CONTENT_MIN;
+	}
+	else if(ethanol_content_pcnt > ETHANOL_CONTENT_MAX){
+		ethanol_content_pcnt = ETHANOL_CONTENT_MAX;
+	}
+
+	if((*engine_speed_rpm > ethanol_content_sample_thresh_rpm) || (*engine_load_g_rev > ethanol_content_sample_thresh_load)){
 		//Do not update fueling or timing variables
-	//}else{
-		fuel_air_ratio = Lookup2d(&ethanol_content_to_fuel_air_ratio_table_2d,*ethanol_content_pcnt);
-		timing_mult = Lookup2d(&ethanol_content_to_timing_mult,*ethanol_content_pcnt);
-	//}
+	}else{
+		fuel_air_ratio = Lookup2d(&ethanol_content_to_fuel_air_ratio_table_2d,ethanol_content_pcnt);
+		timing_mult = Lookup2d(&ethanol_content_to_timing_mult,ethanol_content_pcnt);
+	}
+	
 	
 
 		
 }
 
+
+void flexCANUnpack(){
+	
+	//Unpack the CAN message however we woud like
+	
+	*can216rx_byte0 = *flex_message_byte0;
+	*can216rx_byte1 = *flex_message_byte1;
+	
+	//This is for function padding, though it likely doesn't matter... this shit is BAD
+	asm("nop");
+	asm("nop");
+	asm("nop");
+	asm("nop");
+	asm("nop");
+	asm("nop");
+	asm("nop");
+	asm("nop");
+	asm("nop");
+	asm("nop");
+	asm("nop");
+	asm("nop");
+	asm("nop");
+	asm("nop");
+	asm("nop");
+	asm("nop");
+	asm("nop");
+}
 
 void calcTimingAdders(){
 	
@@ -105,43 +177,18 @@ void calcTimingAdders(){
 	
 }
 
-void applyTimingAdders(){
-	
-	//For Testing
-	float local_leading_base_post =0.0f;
-	float local_leading_base_pre = 0.0f;
-	float local_trailing_base_post =0.0f;
-	float local_trailing_base_pre = 0.0f;
-	
-	local_leading_base_pre = *ignition_leading_base_final_deg;
-	calculateLeadingTimingBase();
-	local_leading_base_post = *ignition_leading_base_final_deg;
-	
-	local_trailing_base_pre = *ignition_trailing_base_final_deg;
-	calculateTrailingTimingBase();
-	local_trailing_base_post = *ignition_trailing_base_final_deg;
-	
-}
-
+#ifdef DEBUG
 void SetValues() __attribute__ ((section ("Misc")));
 
 void SetValues() 
 {
-	// These are just here to clarify the boundary between the prologue and the
-	// 'real' code when stepping through in a debugger.
-	asm("nop");
-	asm("nop");
-
-	// If you change compiler settings, inspect the way the variables get set.
-	// Ideally it should take three instructions per assignment, with no 
-	// references to other memory.  If this does reference other memory, patches
-	// will be difficult to apply.
 	
-	// LC/FFS test settings
-	*engine_load_g_rev = 0.95f;
-	*engine_speed_rpm = 6500.0f;
+	*engine_load_g_rev = 0.02f;
+	*engine_speed_rpm = 1000.0f;
 	*coolant_temp_degC = 1.0f;
-	*ethanol_content_pcnt = 70.1f;
+	//*ethanol_content_pcnt = 70.1f;
 	*coolant_temp_post_fault_detection_degC = 85.0f;
+	*flex_message_byte0 = 0x12;
 
 }
+#endif

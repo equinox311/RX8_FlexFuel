@@ -3,10 +3,11 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 .section RomHole_ForCode,"ax"
-.align 4
-.global _EndOfEthanolCode
+.fill 4
+.string "G-ROM FLEX FUEL APP v1.0"
 
-_EndOfEthanolCode:
-	.long 0x555
+.section RomHole_calibrations, "ax"
+.fill 4
+.string "G-ROM FLEX FUEL CAL v1.0"
 
 .end

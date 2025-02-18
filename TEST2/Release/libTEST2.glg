@@ -1,0 +1,4 @@
+--compiler-options=-m2a,-Os,-fdata-sections,-ffunction-sections,-falign-jumps,-fno-function-cse,-funit-at-a-time
+--output="C:\WorkSpace\TEST2\TEST2\Release\libTEST2.a"
+--select-lib=optlib
+--header-files=all

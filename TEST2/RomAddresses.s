@@ -2,12 +2,23 @@
 ! The ".global" line is needed to allow code in other source files to refer to
 ! the names in this file.
 
-.global _Lookup3d, _Lookup2d, _calculateTrailingTimingBase, _calculateLeadingTimingBase
+.global _Lookup3d, _Lookup2d, _calculateTrailingTimingBase, _calculateLeadingTimingBase, _runFlexFuelCalcs,_engineControlCalculateTiming
+.global _highLevelInit,_initFlexFuelCalcs,_fixedPointToFloat_8bit_MULT_OFF_SIG
 
-.equ _Lookup3d,                 0x20DC     
-.equ _Lookup2d,               	0x2068
-.equ _calculateTrailingTimingBase,		0x1202a
-.equ _calculateLeadingTimingBase,		0x11f78
+.equ _Lookup3d,                 			0x20DC     
+.equ _Lookup2d,               				0x2068
+.equ _calculateTrailingTimingBase,			0x1202a
+.equ _calculateLeadingTimingBase,			0x11f78
+.equ _engineControlCalculateTiming,			0x141fc
+.equ _highLevelInit,						0x1107a
+.equ _fixedPointToFloat_8bit_MULT_OFF_SIG,	0x2500	
 
+.section Flex_Patch_Address, "ax"
+.long _runFlexFuelCalcs
 
-.end
+.section Flex_Init_Address,"ax"
+.long _initFlexFuelCalcs
+
+.section Flex_CAN_216_pase_bypass,"ax"
+	nop
+

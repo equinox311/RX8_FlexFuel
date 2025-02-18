@@ -5,12 +5,14 @@
 [CURRENT_PROJECT]
 "TEST2" 
 [GENERAL_DATA]
+"BuildMultipleSettings" "TEST2|Debug||" 
 [BREAKPOINTS]
 [OPEN_WORKSPACE_FILES]
 "C:\WorkSpace\TEST2\TEST2\hardware_setup.c" 
 "C:\WorkSpace\TEST2\TEST2\interrupt_handlers.c" 
 "C:\WorkSpace\TEST2\TEST2\interrupt_handlers.h" 
 "C:\WorkSpace\TEST2\TEST2\lookup3d.s" 
+"C:\WorkSpace\TEST2\TEST2\patches.s" 
 "C:\WorkSpace\TEST2\TEST2\reset_program.asm" 
 "C:\WorkSpace\TEST2\TEST2\restet_handler.s" 
 "C:\WorkSpace\TEST2\TEST2\RomAddresses.s" 
@@ -23,11 +25,12 @@
 [WORKSPACE_FILE_STATES]
 "C:\WorkSpace\TEST2\TEST2\ROMHolesForCode.s" 130 130 1284 441 0 14 
 "C:\WorkSpace\TEST2\TEST2\RomAddresses.s" 104 104 1284 441 0 5 
-"C:\WorkSpace\TEST2\TEST2\TEST2.c" -8 -31 1508 688 1 2 
+"C:\WorkSpace\TEST2\TEST2\TEST2.c" -8 -31 1508 743 1 2 
 "C:\WorkSpace\TEST2\TEST2\hardware_setup.c" 52 52 1284 441 0 12 
 "C:\WorkSpace\TEST2\TEST2\interrupt_handlers.c" 0 0 1284 441 0 9 
 "C:\WorkSpace\TEST2\TEST2\interrupt_handlers.h" 0 0 1284 441 0 10 
 "C:\WorkSpace\TEST2\TEST2\lookup3d.s" 156 156 1284 441 0 7 
+"C:\WorkSpace\TEST2\TEST2\patches.s" 130 130 1258 493 0 15 
 "C:\WorkSpace\TEST2\TEST2\reset_program.asm" 0 0 1284 441 0 8 
 "C:\WorkSpace\TEST2\TEST2\restet_handler.s" 104 104 1284 441 0 13 
 "C:\WorkSpace\TEST2\TEST2\tables_test.s" 0 0 1508 688 0 6 

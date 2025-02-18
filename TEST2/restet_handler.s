@@ -91,7 +91,15 @@ HudiHandler:
 		rte
 		nop
 		
+!!SIM ONLY FUNCTIONS TO PASS BY FUNCTIONS LOOKING AT IO
+.section kill_1,"ax"
+	nop
+	nop
+.section kill_2,"ax"
+	nop
+	nop
 
+.end
 
 .end
 

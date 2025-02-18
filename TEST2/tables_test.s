@@ -38,7 +38,7 @@ timing_mult:
 	.float 0.00,0.00,0.34,0.39,0.45,0.51,0.59,0.67,	0.77,0.88,1.00,	1.00
 
 
-!Timing Adder Tables - Max E content
+!Timing Adder Table Leading - Max E content
 .global _timing_ethanol_adder_leading
 
 _timing_ethanol_adder_leading:
