@@ -20,14 +20,16 @@
 #define can216rx_byte5		((char*)0xffffbb11)
 #define can216rx_byte6		((char*)0xffffbb12)
 #define can216rx_byte7		((char*)0xffffbb13)
-#define can216_rx_fault		((bool*)0xffffa402)
+#define can216_rx_fault		((char*)0xffffa402)
+
+#define can_216_rx_timer	((char*)0xffffbaf8)
 
 
 
 // CAN Stuff Start
 
-#define flex_sensor_id			0x555
-#define flex_message_ram_start	0xFFFFDD40
+#define flex_sensor_id			0x556
+#define flex_message_ram_start	0xFFFFBAF0
 #define flex_message_byte0		((char*)flex_message_ram_start)
 #define flex_message_byte1		((char*)flex_message_byte0 + 1)
 #define flex_message_byte2		((char*)flex_message_byte1 + 1)
@@ -82,8 +84,6 @@ typedef struct {
 }LookupTable2D_t;
 
 
-#define pRamVariables             ((RAMVars*) 0xFFFF6100)
-
 //Defined Tables for Flex fuel
 extern LookupTable3D_t timing_ethanol_adder_leading;
 extern LookupTable3D_t timing_ethanol_adder_trailing;
@@ -91,9 +91,13 @@ extern LookupTable2D_Float_t ethanol_content_to_fuel_air_ratio_table_2d;
 extern LookupTable2D_Float_t ethanol_content_to_timing_mult;
 
 extern float fixedPointToFloat_8bit_MULT_OFF_SIG(float multiplier,float offset,int signal);
-extern float Lookup3d(float index_varX,float index_varY,LookupTable3D_t *table_struct);
+extern float Lookup3d(float index_varX, float index_varY,LookupTable3D_t *table_struct);
 extern float Lookup2d(LookupTable2D_Float_t *table_struct2d, float index2d_varX);
+
+
+//function calls used as hook replacements that need to be called still
 extern void calculateTrailingTimingBase(void);
 extern void calculateLeadingTimingBase(void);
+extern void calculateGearRPMbased(void);
 
 #endif // VARS_H

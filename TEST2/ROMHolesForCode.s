@@ -10,4 +10,10 @@
 .fill 4
 .string "G-ROM FLEX FUEL CAL v1.0"
 
+.section RomHeader,"ax"
+.string "G-ROM_FLEX"
+
+.section CalHeader,"ax"
+.string "G-ROM_FLEX"
+
 .end

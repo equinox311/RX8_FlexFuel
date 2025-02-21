@@ -15,6 +15,7 @@
 
 
 #define BASE_FUEL_AIR_RATIO			0.07196f
+
 #define ETHANOL_CONTENT_MIN			0.0f
 #define ETHANOL_CONTENT_MAX			100.0f
 
@@ -45,16 +46,18 @@ void getFlexMetrics(void) __attribute__ ((section ("RomHole_ForCode")));
 //Calculates timing adders
 void calcTimingAdders(void) __attribute__ ((section ("RomHole_ForCode")));
 
+//Get Ethanol Content from CAN message
+void getEthanolContent(void) __attribute__ ((section ("RomHole_ForCode")));
+
 
 //Main function for ismulation
-#ifdef NOT_DEBUG
+#ifdef NO_DEBUG
 float func(void) __attribute__ ((section ("RomHole_ForCode")));
+unsigned short i __attribute__ ((section ("RAMHole_forVariables"))) = 0U;
 #endif
 
 const float ethanol_content_sample_thresh_rpm __attribute__ ((section ("RomHole_calibrations"))) = 3100.0f;
 const float ethanol_content_sample_thresh_load __attribute__ ((section ("RomHole_calibrations"))) = 0.750f;
-
-unsigned short i __attribute__ ((section ("RAMHole_forVariables"))) = 0U;
 
 //TODO: These need to not be random RAM vars
 float fuel_air_ratio __attribute__ ((section ("RAMHole_forVariables"))); 
@@ -62,20 +65,26 @@ float timing_mult  __attribute__ ((section ("RAMHole_forVariables")));
 float timing_adder_trailing  __attribute__ ((section ("RAMHole_forVariables")));
 float timing_adder_leading  __attribute__ ((section ("RAMHole_forVariables"))); 
 float ethanol_content_pcnt __attribute__ ((section ("RAMHole_forVariables")));
+float ethanol_content_last_valid_pcnt __attribute__ ((section ("RAMHole_forVariables")));
+char flex_can_valid __attribute__ ((section ("RAMHole_forVariables")));
+long alive_count __attribute__ ((section ("RAMHole_forVariables")));
+
+
+char flex_can_timeout_counts  __attribute__ ((section ("Flex_CAN_Timeout_Val"))) = 100; //30ms-ish task rate for can timers
 
 //Setup patches for new adder pointers 
 long timing_adder_trailing_ptr  __attribute__ ((section ("TrailingPointerPatch"))) = &timing_adder_trailing;
 long timing_adder_leading_ptr __attribute__ ((section ("LeadingPointerPatch")))  = &timing_adder_leading;
 
 
-#ifdef DEBUG
+#ifdef NO_DEBUG
 
 float func(){
-	
 	
 	highLevelInit();
 	
 	while(1){
+		flexCANUnpack();	//NOTE: This happens in a different task, but for simulation I guess this is the best I can do..
 		engineControlCalculateTiming();
 		
 		i=i+1;
@@ -96,6 +105,7 @@ void runFlexFuelCalcs(){
 	
 	getFlexMetrics();
 	calcTimingAdders();
+	calculateLeadingTimingBase();
 
 }
 
@@ -107,15 +117,37 @@ void initFlexFuelCalcs(){
 	timing_adder_trailing = 0.0f;
 	timing_adder_leading = 0.0f;
 	ethanol_content_pcnt = 15.0f;
-	
+	ethanol_content_last_valid_pcnt = ethanol_content_pcnt;
+	flex_can_valid = 0;
+	alive_count = 0x123U;	
 }
 
-void getFlexMetrics(){
+void getEthanolContent(){
 	
-	//super bad scud in for right now
-	static float local_etc;
-
-	ethanol_content_pcnt = local_etc;
+	//Simple data validity check, need to add a timeout fault etc
+	if(((*can216rx_byte1 == (char)0x55) && (*can216rx_byte2 == (char)0xAA)) && *can_216_rx_timer != 0U){
+		flex_can_valid = 1;
+	}else{
+		flex_can_valid = 0;
+	}
+	
+	if(flex_can_valid){
+		
+		ethanol_content_pcnt = fixedPointToFloat_8bit_MULT_OFF_SIG(1.0f,0.0f,(int)*can216rx_byte0);
+		ethanol_content_last_valid_pcnt = ethanol_content_pcnt;
+		
+	}else{
+		
+		//CAN timeout, go to value that is known, otherwise go to the last good RX'd value
+		if(*can_216_rx_timer == 0U){
+			ethanol_content_pcnt = 15.0f;
+			ethanol_content_last_valid_pcnt = ethanol_content_pcnt;
+		}else{
+			ethanol_content_pcnt = ethanol_content_last_valid_pcnt;
+		}
+		
+	}
+	
 	
 	//Set boundries
 	if(ethanol_content_pcnt < ETHANOL_CONTENT_MIN){
@@ -124,6 +156,19 @@ void getFlexMetrics(){
 	else if(ethanol_content_pcnt > ETHANOL_CONTENT_MAX){
 		ethanol_content_pcnt = ETHANOL_CONTENT_MAX;
 	}
+	
+	//Run the function we hijacked
+	calculateGearRPMbased();
+	
+	//Debug alive counter
+	alive_count = alive_count + 1;
+	if(alive_count >= 0xFFFE){
+		alive_count = 0;
+	}
+}
+
+void getFlexMetrics(){
+	
 
 	if((*engine_speed_rpm > ethanol_content_sample_thresh_rpm) || (*engine_load_g_rev > ethanol_content_sample_thresh_load)){
 		//Do not update fueling or timing variables
@@ -131,10 +176,6 @@ void getFlexMetrics(){
 		fuel_air_ratio = Lookup2d(&ethanol_content_to_fuel_air_ratio_table_2d,ethanol_content_pcnt);
 		timing_mult = Lookup2d(&ethanol_content_to_timing_mult,ethanol_content_pcnt);
 	}
-	
-	
-
-		
 }
 
 
@@ -144,6 +185,7 @@ void flexCANUnpack(){
 	
 	*can216rx_byte0 = *flex_message_byte0;
 	*can216rx_byte1 = *flex_message_byte1;
+	*can216rx_byte2 = *flex_message_byte2;
 	
 	//This is for function padding, though it likely doesn't matter... this shit is BAD
 	asm("nop");
@@ -155,14 +197,7 @@ void flexCANUnpack(){
 	asm("nop");
 	asm("nop");
 	asm("nop");
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	asm("nop");
+
 }
 
 void calcTimingAdders(){
@@ -177,7 +212,7 @@ void calcTimingAdders(){
 	
 }
 
-#ifdef DEBUG
+#ifdef NO_DEBUG
 void SetValues() __attribute__ ((section ("Misc")));
 
 void SetValues() 

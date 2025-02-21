@@ -59,6 +59,9 @@ SECTIONS
 		__DTOR_END__ = .;
 		_mdata = .;
 	}
+	RomHeader 0x00002000 : AT (0x00002000)
+	{
+	}
 	RSTHandler 0x00004000 : AT (0x00004000)
 	{
 	}
@@ -83,6 +86,9 @@ SECTIONS
 	Flex_Patch_Address 0x00014404 : AT (0x00014404)
 	{
 	}
+	Ethanol_Content_Update 0x0001A938 : AT (0x0001A938)
+	{
+	}
 	Flex_CAN_216_pase_bypass 0x00029784 : AT (0x00029784)
 	{
 	}
@@ -95,11 +101,20 @@ SECTIONS
 	FlexCANStruct 0x0004BD24 : AT (0x0004BD24)
 	{
 	}
+	Mode22EthanolPatch 0x000538AC : AT (0x000538AC)
+	{
+	}
 	RomHole_ForCode 0x0006B914 : AT (0x0006B914)
 	{
 		*(.rodata)
 	}
 	RomHole_calibrations 0x0006C07C : AT (0x0006C07C)
+	{
+	}
+	CalHeader 0x0006D346 : AT (0x0006D346)
+	{
+	}
+	Flex_CAN_Timeout_Val 0x0006D485 : AT (0x0006D485)
 	{
 	}
 	Misc 0x00080000 : AT (0x00080000)
@@ -129,7 +144,7 @@ SECTIONS
 		_ebss = .;
 		_end = .;
 	}
-	RAMHole_forVariables 0xFFFFD900 : AT (0xFFFFD900)
+	RAMHole_forVariables 0xFFFFDD00 : AT (0xFFFFDD00)
 	{
 	}
 }
