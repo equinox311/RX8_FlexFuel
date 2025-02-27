@@ -113,12 +113,17 @@ Flex_CAN_216_pase_bypass
                 0x0000000000029784        0x2 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
 
 Flex_CAN_Unpack_Address
-                0x0000000000029860       0x42
+                0x0000000000029860       0x30
  Flex_CAN_Unpack_Address
-                0x0000000000029860       0x42 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                0x0000000000029860       0x30 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
                 0x0000000000029860                flexCANUnpack
 
 Flex_CAN_Unpack_Address_END
+
+Flex_Patch_FuelAirRatio
+                0x0000000000030ccc        0x4
+ Flex_Patch_FuelAirRatio
+                0x0000000000030ccc        0x4 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
 
 FlexCANStruct   0x000000000004bd24       0x10
  FlexCANStruct  0x000000000004bd24       0x10 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
@@ -129,36 +134,46 @@ Mode22EthanolPatch
  Mode22EthanolPatch
                 0x00000000000538ac        0x2 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
 
+ExtendedLoggingPatch
+                0x0000000000054c44        0x4
+ ExtendedLoggingPatch
+                0x0000000000054c44        0x4 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
+
+ExtendedLoggingCodeHole
+
 RomHole_ForCode
-                0x000000000006b914      0x35d
+                0x000000000006b914      0x3c5
  *(.rodata)
  RomHole_ForCode
-                0x000000000006b914      0x340 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
-                0x000000000006b914                runFlexFuelCalcs
-                0x000000000006b944                initFlexFuelCalcs
-                0x000000000006b9c4                getEthanolContent
-                0x000000000006bb04                getFlexMetrics
-                0x000000000006bba8                calcTimingAdders
+                0x000000000006b914      0x3a8 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                0x000000000006b914                extended_PID_test_caller_func
+                0x000000000006b954                extendedMode22PIDLookup
+                0x000000000006ba5c                initFlexFuelCalcs
+                0x000000000006bacc                getEthanolContent
+                0x000000000006bb94                getFlexMetrics
+                0x000000000006bc1c                calcTimingAdders
+                0x000000000006bc9c                runFlexFuelCalcs
  RomHole_ForCode
-                0x000000000006bc54       0x1d C:\WorkSpace\TEST2\TEST2\Debug\ROMHolesForCode.o
+                0x000000000006bcbc       0x1d C:\WorkSpace\TEST2\TEST2\Debug\ROMHolesForCode.o
 
 RomHole_calibrations
-                0x000000000006c07c      0x535
+                0x000000000006c07c      0x559
  RomHole_calibrations
-                0x000000000006c07c        0x8 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
-                0x000000000006c07c                ethanol_content_sample_thresh_rpm
-                0x000000000006c080                ethanol_content_sample_thresh_load
+                0x000000000006c07c       0x2c C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                0x000000000006c07c                ethanol_content_sample_thresh_load
+                0x000000000006c080                ethanol_content_sample_thresh_rpm
+                0x000000000006c084                extendo_pid
  RomHole_calibrations
-                0x000000000006c084      0x510 C:\WorkSpace\TEST2\TEST2\Debug\tables_test.o
-                0x000000000006c084                ethanol_content_to_fuel_air_ratio_table_2d
-                0x000000000006c084                Start_Ethanol_Tables
-                0x000000000006c0f0                ethanol_content_to_timing_mult
-                0x000000000006c15c                timing_ethanol_adder_leading
-                0x000000000006c378                timing_ethanol_adder_trailing
+                0x000000000006c0a8      0x510 C:\WorkSpace\TEST2\TEST2\Debug\tables_test.o
+                0x000000000006c0a8                ethanol_content_to_fuel_air_ratio_table_2d
+                0x000000000006c0a8                Start_Ethanol_Tables
+                0x000000000006c114                ethanol_content_to_timing_mult
+                0x000000000006c180                timing_ethanol_adder_leading
+                0x000000000006c39c                timing_ethanol_adder_trailing
  RomHole_calibrations
-                0x000000000006c594       0x1d C:\WorkSpace\TEST2\TEST2\Debug\ROMHolesForCode.o
+                0x000000000006c5b8       0x1d C:\WorkSpace\TEST2\TEST2\Debug\ROMHolesForCode.o
 
-.rela.dyn       0x000000000006c5b4        0x0
+.rela.dyn       0x000000000006c5d8        0x0
  .relaRomHole_ForCode
                 0x0000000000000000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
  .rela.text     0x0000000000000000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
@@ -207,17 +222,19 @@ Misc
                 0x00000000ffff6008                _end = .
 
 RAMHole_forVariables
-                0x00000000ffffdd00       0x20
+                0x00000000ffffdd00       0x24
  RAMHole_forVariables
-                0x00000000ffffdd00       0x20 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
-                0x00000000ffffdd00                fuel_air_ratio
-                0x00000000ffffdd04                timing_mult
-                0x00000000ffffdd08                timing_adder_trailing
-                0x00000000ffffdd0c                timing_adder_leading
-                0x00000000ffffdd10                ethanol_content_pcnt
-                0x00000000ffffdd14                ethanol_content_last_valid_pcnt
-                0x00000000ffffdd18                flex_can_valid
-                0x00000000ffffdd1c                alive_count
+                0x00000000ffffdd00       0x24 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                0x00000000ffffdd00                alive_count
+                0x00000000ffffdd04                flex_can_valid_prevLoop
+                0x00000000ffffdd05                flex_can_valid
+                0x00000000ffffdd08                ethanol_content_last_valid_pcnt
+                0x00000000ffffdd0c                ethanol_content_pcnt
+                0x00000000ffffdd10                timing_adder_leading
+                0x00000000ffffdd14                timing_adder_trailing
+                0x00000000ffffdd18                timing_mult
+                0x00000000ffffdd1c                fuel_air_ratio
+                0x00000000ffffdd20                extendedMode22PIDLookup_ptr
 LOAD C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
 LOAD C:\WorkSpace\TEST2\TEST2\Debug\tables_test.o
 LOAD C:\WorkSpace\TEST2\TEST2\Debug\ROMHolesForCode.o
@@ -229,45 +246,45 @@ LOAD c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\lib\g
 END GROUP
 OUTPUT(C:\WorkSpace\TEST2\TEST2\Debug\TEST2.x elf32-sh)
 
-.debug_info     0x0000000000000000      0x3cd
- .debug_info    0x0000000000000000      0x353 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
- .debug_info    0x0000000000000353       0x7a C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
+.debug_info     0x0000000000000000      0x637
+ .debug_info    0x0000000000000000      0x5bd C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+ .debug_info    0x00000000000005bd       0x7a C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
 
-.debug_abbrev   0x0000000000000000       0xd8
- .debug_abbrev  0x0000000000000000       0xc4 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
- .debug_abbrev  0x00000000000000c4       0x14 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
+.debug_abbrev   0x0000000000000000      0x196
+ .debug_abbrev  0x0000000000000000      0x182 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+ .debug_abbrev  0x0000000000000182       0x14 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
 
-.debug_loc      0x0000000000000000      0x138
- .debug_loc     0x0000000000000000      0x138 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+.debug_loc      0x0000000000000000      0x20d
+ .debug_loc     0x0000000000000000      0x20d C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
 
-.debug_aranges  0x0000000000000000       0x68
+.debug_aranges  0x0000000000000000       0x78
  .debug_aranges
-                0x0000000000000000       0x48 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                0x0000000000000000       0x58 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
  .debug_aranges
-                0x0000000000000048       0x20 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
+                0x0000000000000058       0x20 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
 
-.debug_ranges   0x0000000000000000       0x38
- .debug_ranges  0x0000000000000000       0x38 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+.debug_ranges   0x0000000000000000       0x48
+ .debug_ranges  0x0000000000000000       0x48 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
 
-.debug_line     0x0000000000000000      0x115
- .debug_line    0x0000000000000000       0xbe C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
- .debug_line    0x00000000000000be       0x57 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
+.debug_line     0x0000000000000000      0x15d
+ .debug_line    0x0000000000000000      0x106 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+ .debug_line    0x0000000000000106       0x57 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
 
-.debug_str      0x0000000000000000      0x359
- .debug_str     0x0000000000000000      0x359 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
-                                        0x365 (size before relaxing)
+.debug_str      0x0000000000000000      0x458
+ .debug_str     0x0000000000000000      0x458 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                                        0x464 (size before relaxing)
 
 .comment        0x0000000000000000       0x1c
  .comment       0x0000000000000000       0x1c C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
                                          0x1d (size before relaxing)
 
-.debug_frame    0x0000000000000000       0xc0
- .debug_frame   0x0000000000000000       0xc0 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+.debug_frame    0x0000000000000000       0xf4
+ .debug_frame   0x0000000000000000       0xf4 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
 
 
 ==============================================================
 
-Listfile generated by KPIT GNUSH [ELF]-v13.01 on Thursday, February 20, 2025, 23:00:36
+Listfile generated by KPIT GNUSH [ELF]-v13.01 on Thursday, February 27, 2025, 18:42:24
 
 Build options:
 

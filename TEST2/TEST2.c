@@ -15,9 +15,11 @@
 
 
 #define BASE_FUEL_AIR_RATIO			0.07196f
-
 #define ETHANOL_CONTENT_MIN			0.0f
 #define ETHANOL_CONTENT_MAX			100.0f
+
+//Logging
+#define EXTENDED_PID_SIZE			sizeof(extendo_pid)/sizeof(extendo_pid[2])		//TODO: Make this a sizeof call
 
 //CAN setup
 const CAN_Message_Setup_t flex_can_setup __attribute__ ((section ("FlexCANStruct"))) = {
@@ -29,6 +31,8 @@ const CAN_Message_Setup_t flex_can_setup __attribute__ ((section ("FlexCANStruct
 	flex_message_ram_start,
 	0x1000000
 };
+
+
 
 //CAN unpack
 void flexCANUnpack(void) __attribute__ ((section ("Flex_CAN_Unpack_Address")));
@@ -49,8 +53,23 @@ void calcTimingAdders(void) __attribute__ ((section ("RomHole_ForCode")));
 //Get Ethanol Content from CAN message
 void getEthanolContent(void) __attribute__ ((section ("RomHole_ForCode")));
 
+//Extended logging parameter lookup
+void extendedMode22PIDLookup (void) __attribute__ ((section ("RomHole_ForCode")));
+void extended_PID_test_caller_func(char service) __attribute__ ((section ("RomHole_ForCode")));
+long * extendedMode22PIDLookup_ptr __attribute__ ((section ("RAMHole_forVariables"))) = &extendedMode22PIDLookup;
+
+//TODO: Move this to end of section
+const Mode22_PID_t extendo_pid[3]  __attribute__ ((section ("RomHole_calibrations"))) = 
+{
+	{0x555,0x2,0x0,0xfffe,0x0000,&extended_PID_test_caller_func},			//0
+	{0x556,0x2,0x0,0xfffe,0x0000,&extended_PID_test_caller_func},			//1
+	{0x557,0x2,0x0,0xfffe,0x0000,0x55420}									//2
+};
 
 //Main function for ismulation
+
+//#define NO_DEBUG
+
 #ifdef NO_DEBUG
 float func(void) __attribute__ ((section ("RomHole_ForCode")));
 unsigned short i __attribute__ ((section ("RAMHole_forVariables"))) = 0U;
@@ -67,6 +86,7 @@ float timing_adder_leading  __attribute__ ((section ("RAMHole_forVariables")));
 float ethanol_content_pcnt __attribute__ ((section ("RAMHole_forVariables")));
 float ethanol_content_last_valid_pcnt __attribute__ ((section ("RAMHole_forVariables")));
 char flex_can_valid __attribute__ ((section ("RAMHole_forVariables")));
+char flex_can_valid_prevLoop __attribute__ ((section ("RAMHole_forVariables")));
 long alive_count __attribute__ ((section ("RAMHole_forVariables")));
 
 
@@ -81,11 +101,12 @@ long timing_adder_leading_ptr __attribute__ ((section ("LeadingPointerPatch"))) 
 
 float func(){
 	
-	highLevelInit();
+	//highLevelInit();
 	
 	while(1){
-		flexCANUnpack();	//NOTE: This happens in a different task, but for simulation I guess this is the best I can do..
-		engineControlCalculateTiming();
+		//flexCANUnpack();	//NOTE: This happens in a different task, but for simulation I guess this is the best I can do..
+		//engineControlCalculateTiming();
+		extendedMode22PIDLookup();
 		
 		i=i+1;
 		if(i >= 255 && i < 256){
@@ -105,6 +126,8 @@ void runFlexFuelCalcs(){
 	
 	getFlexMetrics();
 	calcTimingAdders();
+	
+	//Run the function we hijacked
 	calculateLeadingTimingBase();
 
 }
@@ -119,7 +142,9 @@ void initFlexFuelCalcs(){
 	ethanol_content_pcnt = 15.0f;
 	ethanol_content_last_valid_pcnt = ethanol_content_pcnt;
 	flex_can_valid = 0;
-	alive_count = 0x123U;	
+	alive_count = 0x123U;
+	//NOTE: This interface doesn't work and isn't known yet updateFaultStatus(flex_fault_index,FAULTED);
+	flex_can_valid_prevLoop = flex_can_valid;
 }
 
 void getEthanolContent(){
@@ -127,8 +152,10 @@ void getEthanolContent(){
 	//Simple data validity check, need to add a timeout fault etc
 	if(((*can216rx_byte1 == (char)0x55) && (*can216rx_byte2 == (char)0xAA)) && *can_216_rx_timer != 0U){
 		flex_can_valid = 1;
+		
 	}else{
 		flex_can_valid = 0;
+		
 	}
 	
 	if(flex_can_valid){
@@ -140,7 +167,9 @@ void getEthanolContent(){
 		
 		//CAN timeout, go to value that is known, otherwise go to the last good RX'd value
 		if(*can_216_rx_timer == 0U){
-			ethanol_content_pcnt = 15.0f;
+			
+			//NOTE: I don't know how to handle this correctly, but probably but to just take the last known good value and set a fault
+			//ethanol_content_pcnt = 15.0f;
 			ethanol_content_last_valid_pcnt = ethanol_content_pcnt;
 		}else{
 			ethanol_content_pcnt = ethanol_content_last_valid_pcnt;
@@ -160,11 +189,8 @@ void getEthanolContent(){
 	//Run the function we hijacked
 	calculateGearRPMbased();
 	
-	//Debug alive counter
-	alive_count = alive_count + 1;
-	if(alive_count >= 0xFFFE){
-		alive_count = 0;
-	}
+	flex_can_valid_prevLoop = flex_can_valid;
+	
 }
 
 void getFlexMetrics(){
@@ -176,6 +202,8 @@ void getFlexMetrics(){
 		fuel_air_ratio = Lookup2d(&ethanol_content_to_fuel_air_ratio_table_2d,ethanol_content_pcnt);
 		timing_mult = Lookup2d(&ethanol_content_to_timing_mult,ethanol_content_pcnt);
 	}
+	
+	
 }
 
 
@@ -212,6 +240,71 @@ void calcTimingAdders(){
 	
 }
 
+
+
+void extendedMode22PIDLookup(){
+	
+	int pid_array_count;
+	char pid_found;
+	int response_length;
+	
+	response_length = 0;
+	pid_array_count = 0;
+	pid_found = 0;
+	
+	while((pid_array_count < 2) && (pid_found == 0)){
+		
+		if(extendo_pid[pid_array_count].pid_id == *uds_pid_data_rx_MAYBE){
+			
+			pid_found = 1;
+	
+			if((extendo_pid[pid_array_count].mem_mask_MAYBE & *pid_AND_val) == 0){
+				
+ 				response_length = udsErrorResponse((char)0x22,(char)0x31);
+				
+			}else{
+				if(*pid_id_greaterThan_1byte != (char)0x80){
+					
+					extendUDSDataReponse();
+				}
+				
+				//Run function for PID
+				extendo_pid[pid_array_count].function_ptr((char)0x22);
+					
+				if(*pid_id_greaterThan_1byte == 0){
+				
+					response_length = extendo_pid[pid_array_count].response_length + 3U;
+					
+				}else if(*pid_id_greaterThan_1byte == (char)0xff ){
+					
+					unknownMode22Func(0x22);
+		         	response_length = udsErrorResponse((char)0x22,(char)0x22);
+
+        		}
+			}
+		}
+		
+		pid_array_count++;
+	}
+	
+	if(pid_found == 0){
+		response_length = udsErrorResponse((char)0x22,(char)0x31);
+	}
+		
+	return response_length;
+}
+
+
+void extended_PID_test_caller_func(char service){
+	
+	unsigned int val;
+	
+	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(ethanol_content_pcnt,1.0f,-40.0f);
+	intToUDS_SERVICE_DATA(service,val);
+	
+}
+
+
 #ifdef NO_DEBUG
 void SetValues() __attribute__ ((section ("Misc")));
 
@@ -221,7 +314,7 @@ void SetValues()
 	*engine_load_g_rev = 0.02f;
 	*engine_speed_rpm = 1000.0f;
 	*coolant_temp_degC = 1.0f;
-	//*ethanol_content_pcnt = 70.1f;
+	ethanol_content_pcnt = -5.5f;
 	*coolant_temp_post_fault_detection_degC = 85.0f;
 	*flex_message_byte0 = 0x12;
 

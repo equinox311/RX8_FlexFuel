@@ -98,10 +98,19 @@ SECTIONS
 	Flex_CAN_Unpack_Address_END 0x000298A2 : AT (0x000298A2)
 	{
 	}
+	Flex_Patch_FuelAirRatio 0x00030CCC : AT (0x00030CCC)
+	{
+	}
 	FlexCANStruct 0x0004BD24 : AT (0x0004BD24)
 	{
 	}
 	Mode22EthanolPatch 0x000538AC : AT (0x000538AC)
+	{
+	}
+	ExtendedLoggingPatch 0x00054C44 : AT (0x00054C44)
+	{
+	}
+	ExtendedLoggingCodeHole 0x00055E02 : AT (0x00055E02)
 	{
 	}
 	RomHole_ForCode 0x0006B914 : AT (0x0006B914)
