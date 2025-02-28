@@ -54,17 +54,19 @@ void calcTimingAdders(void) __attribute__ ((section ("RomHole_ForCode")));
 void getEthanolContent(void) __attribute__ ((section ("RomHole_ForCode")));
 
 //Extended logging parameter lookup
-void extendedMode22PIDLookup (void) __attribute__ ((section ("RomHole_ForCode")));
+int extendedMode22PIDLookup (void) __attribute__ ((section ("RomHole_ForCode")));
 void extended_PID_test_caller_func(char service) __attribute__ ((section ("RomHole_ForCode")));
-long * extendedMode22PIDLookup_ptr __attribute__ ((section ("RAMHole_forVariables"))) = &extendedMode22PIDLookup;
+//long * extendedMode22PIDLookup_ptr __attribute__ ((section ("RAMHole_forVariables"))) = &extendedMode22PIDLookup;
 
 //TODO: Move this to end of section
 const Mode22_PID_t extendo_pid[3]  __attribute__ ((section ("RomHole_calibrations"))) = 
 {
 	{0x555,0x2,0x0,0xfffe,0x0000,&extended_PID_test_caller_func},			//0
-	{0x556,0x2,0x0,0xfffe,0x0000,&extended_PID_test_caller_func},			//1
-	{0x557,0x2,0x0,0xfffe,0x0000,0x55420}									//2
+	{0x22b,0x2,0x0,0xfffe,0x0000,&extended_PID_test_caller_func},			//1
+	{0x557,0x2,0x0,0xfffe,0x0000,0x54eb4}			//2
 };
+
+
 
 //Main function for ismulation
 
@@ -106,8 +108,8 @@ float func(){
 	while(1){
 		//flexCANUnpack();	//NOTE: This happens in a different task, but for simulation I guess this is the best I can do..
 		//engineControlCalculateTiming();
-		extendedMode22PIDLookup();
-		
+		//extendedMode22PIDLookup();
+		int var = extendedMode22PIDLookup();
 		i=i+1;
 		if(i >= 255 && i < 256){
 			i=0;
@@ -242,17 +244,17 @@ void calcTimingAdders(){
 
 
 
-void extendedMode22PIDLookup(){
+int extendedMode22PIDLookup(){
 	
 	int pid_array_count;
 	char pid_found;
 	int response_length;
 	
-	response_length = 0;
 	pid_array_count = 0;
 	pid_found = 0;
 	
-	while((pid_array_count < 2) && (pid_found == 0)){
+	//G-ROM PID Lookup
+	while(pid_array_count < 3 && pid_found == 0){
 		
 		if(extendo_pid[pid_array_count].pid_id == *uds_pid_data_rx_MAYBE){
 			
@@ -270,7 +272,7 @@ void extendedMode22PIDLookup(){
 				
 				//Run function for PID
 				extendo_pid[pid_array_count].function_ptr((char)0x22);
-					
+	
 				if(*pid_id_greaterThan_1byte == 0){
 				
 					response_length = extendo_pid[pid_array_count].response_length + 3U;
@@ -287,10 +289,48 @@ void extendedMode22PIDLookup(){
 		pid_array_count++;
 	}
 	
+	pid_array_count = 0;
+	
+	//OEM PID lookup
+	while(pid_array_count < 110 && pid_found == 0){
+		
+		if(stock_pid_man[pid_array_count].pid_id == *uds_pid_data_rx_MAYBE){
+			
+			pid_found = 1;
+	
+			if((stock_pid_man[pid_array_count].mem_mask_MAYBE & *pid_AND_val) == 0){
+				
+ 				response_length = udsErrorResponse((char)0x22,(char)0x31);
+				
+			}else{
+				if(*pid_id_greaterThan_1byte != (char)0x80){
+					
+					extendUDSDataReponse();
+				}
+				
+				//Run function for PID
+				stock_pid_man[pid_array_count].function_ptr((char)0x22);
+	
+				if(*pid_id_greaterThan_1byte == 0){
+				
+					response_length = stock_pid_man[pid_array_count].response_length + 3U;
+					
+				}else if(*pid_id_greaterThan_1byte == (char)0xff ){
+					
+					unknownMode22Func(0x22);
+		         	response_length = udsErrorResponse((char)0x22,(char)0x22);
+
+        		}
+			}
+		}
+		
+		pid_array_count++;
+	}
+	
 	if(pid_found == 0){
 		response_length = udsErrorResponse((char)0x22,(char)0x31);
 	}
-		
+
 	return response_length;
 }
 
@@ -298,8 +338,8 @@ void extendedMode22PIDLookup(){
 void extended_PID_test_caller_func(char service){
 	
 	unsigned int val;
-	
-	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(ethanol_content_pcnt,1.0f,-40.0f);
+
+	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(ethanol_content_pcnt,1.0f,0.0f);
 	intToUDS_SERVICE_DATA(service,val);
 	
 }

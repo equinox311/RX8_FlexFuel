@@ -12,7 +12,8 @@
 #define uds_pid_data_rx_MAYBE					((short*)0xffffcffe)
 #define pid_AND_val								((short*)0xffffd1c8)
 #define pid_id_greaterThan_1byte				((char *)0xffffcffc)
-#define factory_mode22_PID_list					((Mode22_PID_t *)0x5d994)
+#define stock_pid_man							((Mode22_PID_t *)0x5d994)
+
 
 //CAN 0x216 repurpose
 #define can216rx_byte0		((char*)0xffffbb0c)
@@ -75,7 +76,7 @@ typedef struct Mode22_PID_t {
 	char unknown;
     short mem_mask_MAYBE;
 	short unknown2;
-    void (*function_ptr)(char);
+    void (*function_ptr)(char) __attribute__((aligned(4)));
 } __attribute__((packed)) Mode22_PID_t;
 
 
@@ -128,9 +129,9 @@ extern void getMode22PID(void);
 extern int udsErrorResponse(char service, char reponse);
 extern void extendUDSDataReponse(void);
 extern void byteToUDS_SERVICE_DATA(char service, char data);
-extern void intToUDS_SERVICE_DATA(char service, int data);
+extern void intToUDS_SERVICE_DATA(char service, unsigned int data);
 extern long unknownMode22Func(char param);
-extern void mode22Hanlder(void);
+extern int mode22Hanlder(void);
 
 
 

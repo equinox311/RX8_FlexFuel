@@ -1,3 +1,4 @@
 "C:\WorkSpace\TEST2\TEST2\restet_handler.s"
+-renesas
 --gdwarf2
 -o "C:\WorkSpace\TEST2\TEST2\Debug\restet_handler.o"

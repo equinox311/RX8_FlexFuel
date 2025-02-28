@@ -1,8 +1,9 @@
 -T "C:\WorkSpace\TEST2\TEST2\Debug\TEST2_Debug_auto.gsi"
 -T "C:\WorkSpace\TEST2\TEST2\Debug\TEST2_input.tmp" 
--L "c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\m4"
+-L "c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\mrenesas\m4"
 -L "C:\WorkSpace\TEST2\TEST2\Debug"
 -Map "C:\WorkSpace\TEST2\TEST2\Debug\TEST2.map"
+-renesas
 --start-group -l "TEST2" -l "gcc-Os-4-200" -l "gcc" --end-group
 -o "C:\WorkSpace\TEST2\TEST2\Debug\TEST2.x"
 -e _ResetHandler

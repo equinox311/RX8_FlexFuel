@@ -1,3 +1,4 @@
 "C:\WorkSpace\TEST2\TEST2\RomAddresses.s"
+-renesas
 --gdwarf2
 -o "C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o"

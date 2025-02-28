@@ -1,3 +1,4 @@
 "C:\WorkSpace\TEST2\TEST2\ROMHolesForCode.s"
+-renesas
 --gdwarf2
 -o "C:\WorkSpace\TEST2\TEST2\Debug\ROMHolesForCode.o"

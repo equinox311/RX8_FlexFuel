@@ -1,10 +1,10 @@
 -c -x c
 -m4
 -mb
+-mrenesas
 -I "c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\sh-elf\optlibinc"
 -I "c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\optlibinc"
 -D DEBUG
--Os -fno-function-cse -funit-at-a-time -falign-jumps -fdata-sections -ffunction-sections
 -nostdinc
 "C:\WorkSpace\TEST2\TEST2\TEST2.c"
 -g

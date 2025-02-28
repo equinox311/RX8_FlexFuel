@@ -52,10 +52,10 @@
 	
 .section ExtendedLoggingPatch, "ax" !0x55d08 OLD 					!54C44 for no patch
 	.long _extendedMode22PIDLookup
-	!mov.w @(0xFB,pc),r10
-	!mov.l @r10,r10
-	!jsr @r10
-	!nop !mov r0,r11
+!	mov.w @(0xFB,pc),r10
+!	mov.l @r10,r10
+!	jsr @r10
+!	nop
 
 !.section ExtendedLoggingCodeHole, "ax"
 !	.short _extendedMode22PIDLookup_ptr
