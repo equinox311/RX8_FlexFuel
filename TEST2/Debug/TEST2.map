@@ -130,9 +130,6 @@ FlexCANStruct   0x000000000004bd24       0x10
                 0x000000000004bd24                flex_can_setup
 
 Mode22EthanolPatch
-                0x00000000000538ac        0x2
- Mode22EthanolPatch
-                0x00000000000538ac        0x2 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
 
 ExtendedLoggingPatch
                 0x0000000000054c44        0x4
@@ -142,38 +139,46 @@ ExtendedLoggingPatch
 ExtendedLoggingCodeHole
 
 RomHole_ForCode
-                0x000000000006b914      0x6c1
+                0x000000000006b914      0x83d
  *(.rodata)
  RomHole_ForCode
-                0x000000000006b914      0x6a4 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                0x000000000006b914      0x820 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
                 0x000000000006b914                runFlexFuelCalcs
-                0x000000000006b954                initFlexFuelCalcs
-                0x000000000006b9d8                getEthanolContent
+                0x000000000006b944                initFlexFuelCalcs
+                0x000000000006b9c8                getEthanolContent
                 0x000000000006baec                getFlexMetrics
                 0x000000000006bb8c                calcTimingAdders
                 0x000000000006bc34                extendedMode22PIDLookup
-                0x000000000006bf40                extended_PID_test_caller_func
+                0x000000000006bf40                getEthanolContentMode22
+                0x000000000006bfb8                getFlexMultiplierMode22
+                0x000000000006c034                getFlexLeadingAdderMode22
+                0x000000000006c0b4                getFlexTrailingAdderMode22
  RomHole_ForCode
-                0x000000000006bfb8       0x1d C:\WorkSpace\TEST2\TEST2\Debug\ROMHolesForCode.o
+                0x000000000006c134       0x1d C:\WorkSpace\TEST2\TEST2\Debug\ROMHolesForCode.o
 
 RomHole_calibrations
-                0x000000000006c07c      0x559
+                0x000000000006c400      0x535
  RomHole_calibrations
-                0x000000000006c07c       0x2c C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
-                0x000000000006c07c                extendo_pid
-                0x000000000006c0a0                ethanol_content_sample_thresh_rpm
-                0x000000000006c0a4                ethanol_content_sample_thresh_load
+                0x000000000006c400        0x8 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                0x000000000006c400                ethanol_content_sample_thresh_rpm
+                0x000000000006c404                ethanol_content_sample_thresh_load
  RomHole_calibrations
-                0x000000000006c0a8      0x510 C:\WorkSpace\TEST2\TEST2\Debug\tables_test.o
-                0x000000000006c0a8                ethanol_content_to_fuel_air_ratio_table_2d
-                0x000000000006c0a8                Start_Ethanol_Tables
-                0x000000000006c114                ethanol_content_to_timing_mult
-                0x000000000006c180                timing_ethanol_adder_leading
-                0x000000000006c39c                timing_ethanol_adder_trailing
+                0x000000000006c408      0x510 C:\WorkSpace\TEST2\TEST2\Debug\tables_test.o
+                0x000000000006c408                ethanol_content_to_fuel_air_ratio_table_2d
+                0x000000000006c408                Start_Ethanol_Tables
+                0x000000000006c474                ethanol_content_to_timing_mult
+                0x000000000006c4e0                timing_ethanol_adder_leading
+                0x000000000006c6fc                timing_ethanol_adder_trailing
  RomHole_calibrations
-                0x000000000006c5b8       0x1d C:\WorkSpace\TEST2\TEST2\Debug\ROMHolesForCode.o
+                0x000000000006c918       0x1d C:\WorkSpace\TEST2\TEST2\Debug\ROMHolesForCode.o
 
-.rela.dyn       0x000000000006c5d8        0x0
+RomHole_ForPidStruct
+                0x000000000006ccc0       0x30
+ RomHole_ForPidStruct
+                0x000000000006ccc0       0x30 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                0x000000000006ccc0                extendo_pid
+
+.rela.dyn       0x000000000006ccf0        0x0
  .relaRomHole_ForCode
                 0x0000000000000000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
  .rela.text     0x0000000000000000        0x0 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
@@ -245,45 +250,45 @@ LOAD c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\lib\g
 END GROUP
 OUTPUT(C:\WorkSpace\TEST2\TEST2\Debug\TEST2.x elf32-sh)
 
-.debug_info     0x0000000000000000      0x51d
- .debug_info    0x0000000000000000      0x4a3 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
- .debug_info    0x00000000000004a3       0x7a C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
+.debug_info     0x0000000000000000      0x5cf
+ .debug_info    0x0000000000000000      0x555 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+ .debug_info    0x0000000000000555       0x7a C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
 
-.debug_abbrev   0x0000000000000000      0x174
- .debug_abbrev  0x0000000000000000      0x160 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
- .debug_abbrev  0x0000000000000160       0x14 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
+.debug_abbrev   0x0000000000000000      0x183
+ .debug_abbrev  0x0000000000000000      0x16f C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+ .debug_abbrev  0x000000000000016f       0x14 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
 
-.debug_loc      0x0000000000000000      0x1cc
- .debug_loc     0x0000000000000000      0x1cc C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+.debug_loc      0x0000000000000000      0x298
+ .debug_loc     0x0000000000000000      0x298 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
 
-.debug_aranges  0x0000000000000000       0x78
+.debug_aranges  0x0000000000000000       0x90
  .debug_aranges
-                0x0000000000000000       0x58 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                0x0000000000000000       0x70 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
  .debug_aranges
-                0x0000000000000058       0x20 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
+                0x0000000000000070       0x20 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
 
-.debug_ranges   0x0000000000000000       0x48
- .debug_ranges  0x0000000000000000       0x48 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+.debug_ranges   0x0000000000000000       0x60
+ .debug_ranges  0x0000000000000000       0x60 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
 
-.debug_line     0x0000000000000000      0x164
- .debug_line    0x0000000000000000      0x10d C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
- .debug_line    0x000000000000010d       0x57 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
+.debug_line     0x0000000000000000      0x177
+ .debug_line    0x0000000000000000      0x120 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+ .debug_line    0x0000000000000120       0x57 C:\WorkSpace\TEST2\TEST2\Debug\RomAddresses.o
 
-.debug_str      0x0000000000000000      0x43c
- .debug_str     0x0000000000000000      0x43c C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
-                                        0x448 (size before relaxing)
+.debug_str      0x0000000000000000      0x483
+ .debug_str     0x0000000000000000      0x483 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+                                        0x48f (size before relaxing)
 
 .comment        0x0000000000000000       0x1c
  .comment       0x0000000000000000       0x1c C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
                                          0x1d (size before relaxing)
 
-.debug_frame    0x0000000000000000      0x108
- .debug_frame   0x0000000000000000      0x108 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
+.debug_frame    0x0000000000000000      0x168
+ .debug_frame   0x0000000000000000      0x168 C:\WorkSpace\TEST2\TEST2\Debug\TEST2.o
 
 
 ==============================================================
 
-Listfile generated by KPIT GNUSH [ELF]-v13.01 on Thursday, February 27, 2025, 21:36:41
+Listfile generated by KPIT GNUSH [ELF]-v13.01 on Friday, February 28, 2025, 16:02:02
 
 Build options:
 

@@ -43,9 +43,9 @@
 .section Flex_CAN_216_pase_bypass,"ax"
 	nop
 
-!NOTE: This takes over the Mode 22 PID for Evap Purge Percent
-.section Mode22EthanolPatch,"ax"
-	.short _ethanol_content_pcnt
+!NOTE: This takes over the Mode 22 PID for Evap Purge Percent, commenting it out should disable this
+!.section Mode22EthanolPatch,"ax"
+!	.short _ethanol_content_pcnt
 
 .section Flex_Patch_FuelAirRatio, "ax"
 	.long _fuel_air_ratio

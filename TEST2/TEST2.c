@@ -55,17 +55,20 @@ void getEthanolContent(void) __attribute__ ((section ("RomHole_ForCode")));
 
 //Extended logging parameter lookup
 int extendedMode22PIDLookup (void) __attribute__ ((section ("RomHole_ForCode")));
-void extended_PID_test_caller_func(char service) __attribute__ ((section ("RomHole_ForCode")));
+void getEthanolContentMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
+void getFlexMultiplierMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
+void getFlexLeadingAdderMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
+void getFlexTrailingAdderMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
 //long * extendedMode22PIDLookup_ptr __attribute__ ((section ("RAMHole_forVariables"))) = &extendedMode22PIDLookup;
 
 //TODO: Move this to end of section
-const Mode22_PID_t extendo_pid[3]  __attribute__ ((section ("RomHole_calibrations"))) = 
+const Mode22_PID_t extendo_pid[4] __attribute__ ((section ("RomHole_ForPidStruct"))) = 
 {
-	{0x555,0x2,0x0,0xfffe,0x0000,&extended_PID_test_caller_func},			//0
-	{0x22b,0x2,0x0,0xfffe,0x0000,&extended_PID_test_caller_func},			//1
-	{0x557,0x2,0x0,0xfffe,0x0000,0x54eb4}			//2
+	{0x555,0x2,0x0,0xfffe,0x0000,&getEthanolContentMode22},			//0
+	{0x22b,0x2,0x0,0xfffe,0x0000,&getFlexMultiplierMode22},			//1
+	{0x557,0x2,0x0,0xfffe,0x0000,&getFlexLeadingAdderMode22},		//2
+	{0x558,0x2,0x0,0xfffe,0x0000,&getFlexTrailingAdderMode22}		//3
 };
-
 
 
 //Main function for ismulation
@@ -126,7 +129,7 @@ float func(){
 
 void runFlexFuelCalcs(){
 	
-	getFlexMetrics();
+	
 	calcTimingAdders();
 	
 	//Run the function we hijacked
@@ -188,6 +191,8 @@ void getEthanolContent(){
 		ethanol_content_pcnt = ETHANOL_CONTENT_MAX;
 	}
 	
+	//get data			NOTE: TODO: May want to move this elsewhere
+	getFlexMetrics();
 	//Run the function we hijacked
 	calculateGearRPMbased();
 	
@@ -254,7 +259,7 @@ int extendedMode22PIDLookup(){
 	pid_found = 0;
 	
 	//G-ROM PID Lookup
-	while(pid_array_count < 3 && pid_found == 0){
+	while(pid_array_count < 4 && pid_found == 0){
 		
 		if(extendo_pid[pid_array_count].pid_id == *uds_pid_data_rx_MAYBE){
 			
@@ -335,7 +340,7 @@ int extendedMode22PIDLookup(){
 }
 
 
-void extended_PID_test_caller_func(char service){
+void getEthanolContentMode22(char service){
 	
 	unsigned int val;
 
@@ -343,6 +348,34 @@ void extended_PID_test_caller_func(char service){
 	intToUDS_SERVICE_DATA(service,val);
 	
 }
+
+void getFlexMultiplierMode22(char service){
+	
+	unsigned int val;
+
+	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(timing_mult,0.0005f,0.0f);
+	intToUDS_SERVICE_DATA(service,val);
+	
+}
+
+void getFlexLeadingAdderMode22(char service){
+	
+	unsigned int val;
+
+	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(timing_adder_leading,0.5f,-50.0f);
+	intToUDS_SERVICE_DATA(service,val);
+	
+}
+
+void getFlexTrailingAdderMode22(char service){
+	
+	unsigned int val;
+
+	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(timing_adder_trailing,0.5f,-50.0f);
+	intToUDS_SERVICE_DATA(service,val);
+	
+}
+
 
 
 #ifdef NO_DEBUG

@@ -117,7 +117,10 @@ SECTIONS
 	{
 		*(.rodata)
 	}
-	RomHole_calibrations 0x0006C07C : AT (0x0006C07C)
+	RomHole_calibrations 0x0006C400 : AT (0x0006C400)
+	{
+	}
+	RomHole_ForPidStruct 0x0006CCC0 : AT (0x0006CCC0)
 	{
 	}
 	CalHeader 0x0006D346 : AT (0x0006D346)
