@@ -59,7 +59,6 @@ void getEthanolContentMode22(char service) __attribute__ ((section ("RomHole_For
 void getFlexMultiplierMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
 void getFlexLeadingAdderMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
 void getFlexTrailingAdderMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
-//long * extendedMode22PIDLookup_ptr __attribute__ ((section ("RAMHole_forVariables"))) = &extendedMode22PIDLookup;
 
 //TODO: Move this to end of section
 const Mode22_PID_t extendo_pid[4] __attribute__ ((section ("RomHole_ForPidStruct"))) = 
@@ -85,6 +84,7 @@ const float ethanol_content_sample_thresh_load __attribute__ ((section ("RomHole
 
 //TODO: These need to not be random RAM vars
 float fuel_air_ratio __attribute__ ((section ("RAMHole_forVariables"))); 
+float fuel_air_ratio_filtered __attribute__ ((section ("RAMHole_forVariables"))); 
 float timing_mult  __attribute__ ((section ("RAMHole_forVariables")));
 float timing_adder_trailing  __attribute__ ((section ("RAMHole_forVariables")));
 float timing_adder_leading  __attribute__ ((section ("RAMHole_forVariables"))); 
@@ -93,6 +93,9 @@ float ethanol_content_last_valid_pcnt __attribute__ ((section ("RAMHole_forVaria
 char flex_can_valid __attribute__ ((section ("RAMHole_forVariables")));
 char flex_can_valid_prevLoop __attribute__ ((section ("RAMHole_forVariables")));
 long alive_count __attribute__ ((section ("RAMHole_forVariables")));
+float fuel_air_ratio_FF __attribute__ ((section ("RAMHole_forVariables")));//16ms update rate ish
+float timing_mult_filtered __attribute__ ((section ("RAMHole_forVariables")));
+float timing_mult_FF __attribute__ ((section ("RAMHole_forVariables")));//16ms update rate ish
 
 
 char flex_can_timeout_counts  __attribute__ ((section ("Flex_CAN_Timeout_Val"))) = 100; //30ms-ish task rate for can timers
@@ -104,20 +107,48 @@ long timing_adder_leading_ptr __attribute__ ((section ("LeadingPointerPatch"))) 
 
 #ifdef NO_DEBUG
 
+float var;
+
+void SetValues() __attribute__ ((section ("Misc")));
+
+void SetValues() 
+{
+	
+	*engine_load_g_rev = 0.02f;
+	*engine_speed_rpm = 1000.0f;
+	*coolant_temp_degC = 1.0f;
+	ethanol_content_pcnt = 15.5f;
+	*coolant_temp_post_fault_detection_degC = 85.0f;
+	*flex_message_byte0 = 0x12;
+
+}
+
+void delay_ms(unsigned int ms)
+{
+    unsigned int i, j;
+    for (i = 0; i < ms; i++) {
+        for (j = 0; j < 1000; j++) {
+            __asm("NOP");  // No Operation instruction, just to add some delay
+        }
+    }
+}
+
 float func(){
 	
 	//highLevelInit();
-	
+	initFlexFuelCalcs();
 	while(1){
+		//SetValues();
+		getFlexMetrics();
 		//flexCANUnpack();	//NOTE: This happens in a different task, but for simulation I guess this is the best I can do..
-		//engineControlCalculateTiming();
-		//extendedMode22PIDLookup();
+
 		int var = extendedMode22PIDLookup();
 		i=i+1;
 		if(i >= 255 && i < 256){
 			i=0;
 		}
-		
+	delay_ms(15);
+
 	}
 	
 	return 0;
@@ -141,13 +172,16 @@ void runFlexFuelCalcs(){
 void initFlexFuelCalcs(){
 	
 	fuel_air_ratio = BASE_FUEL_AIR_RATIO;
+	fuel_air_ratio_filtered = fuel_air_ratio;
 	timing_mult = 0.0f;
 	timing_adder_trailing = 0.0f;
 	timing_adder_leading = 0.0f;
 	ethanol_content_pcnt = 15.0f;
 	ethanol_content_last_valid_pcnt = ethanol_content_pcnt;
 	flex_can_valid = 0;
-	alive_count = 0x123U;
+	alive_count = 0U;
+	fuel_air_ratio_FF = 0.002;
+	timing_mult_FF = 0.002;
 	//NOTE: This interface doesn't work and isn't known yet updateFaultStatus(flex_fault_index,FAULTED);
 	flex_can_valid_prevLoop = flex_can_valid;
 }
@@ -202,7 +236,8 @@ void getEthanolContent(){
 
 void getFlexMetrics(){
 	
-
+	//This is called in a ~16ms task rate in the ECU
+	
 	if((*engine_speed_rpm > ethanol_content_sample_thresh_rpm) || (*engine_load_g_rev > ethanol_content_sample_thresh_load)){
 		//Do not update fueling or timing variables
 	}else{
@@ -210,7 +245,9 @@ void getFlexMetrics(){
 		timing_mult = Lookup2d(&ethanol_content_to_timing_mult,ethanol_content_pcnt);
 	}
 	
-	
+	//NOTE: Should probably turn into a ethanol content filter instead of filtering both signals
+	fuel_air_ratio_filtered = firstOrderFilter_SIG_SIGPREV_MIN_FF(fuel_air_ratio,fuel_air_ratio_filtered, 0.018f, fuel_air_ratio_FF);
+	timing_mult_filtered = firstOrderFilter_SIG_SIGPREV_MIN_FF(timing_mult,timing_mult_filtered, 0.018f, timing_mult_FF);
 }
 
 
@@ -239,11 +276,11 @@ void calcTimingAdders(){
 	
 	//Trailing
 	timing_adder_trailing = Lookup3d(*engine_load_g_rev,*engine_speed_rpm,&timing_ethanol_adder_trailing);
-	timing_adder_trailing = timing_adder_trailing * timing_mult;
+	timing_adder_trailing = timing_adder_trailing * timing_mult_filtered;
 		
 	//Leading
 	timing_adder_leading = Lookup3d(*engine_load_g_rev,*engine_speed_rpm,&timing_ethanol_adder_leading);
-	timing_adder_leading = timing_adder_leading * timing_mult;
+	timing_adder_leading = timing_adder_leading * timing_mult_filtered;
 	
 }
 
@@ -353,7 +390,7 @@ void getFlexMultiplierMode22(char service){
 	
 	unsigned int val;
 
-	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(timing_mult,0.0005f,0.0f);
+	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(timing_mult_filtered,0.0005f,0.0f);
 	intToUDS_SERVICE_DATA(service,val);
 	
 }
@@ -377,19 +414,3 @@ void getFlexTrailingAdderMode22(char service){
 }
 
 
-
-#ifdef NO_DEBUG
-void SetValues() __attribute__ ((section ("Misc")));
-
-void SetValues() 
-{
-	
-	*engine_load_g_rev = 0.02f;
-	*engine_speed_rpm = 1000.0f;
-	*coolant_temp_degC = 1.0f;
-	ethanol_content_pcnt = -5.5f;
-	*coolant_temp_post_fault_detection_degC = 85.0f;
-	*flex_message_byte0 = 0x12;
-
-}
-#endif

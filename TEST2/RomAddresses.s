@@ -6,6 +6,7 @@
 .global _highLevelInit,_initFlexFuelCalcs,_fixedPointToFloat_8bit_MULT_OFF_SIG,_indexLookupSomething, _can216RXParse
 .global _calculateGearRPMbased, _updateFaultStatus, _getMode22PID, _floatToInt_SIGNAL_MULT_OFFSET, _udsErrorResponse,_extendUDSDataReponse
 .global _intToUDS_SERVICE_DATA, _floatToFP_16bit_NUMBER_SCALAR_OFFSET, _unknownMode22Func,_mode22Hanlder,_byteToUDS_SERVICE_DATA
+.global _firstOrderFilter_SIG_SIGPREV_MIN_FF
 
 .equ _Lookup3d,                 			0x20DC     
 .equ _Lookup2d,               				0x2068
@@ -24,7 +25,7 @@
 .equ _byteToUDS_SERVICE_DATA,				0x55eee
 .equ _unknownMode22Func,					0x66aaa
 .equ _mode22Hanlder,						0x54b72
-
+.equ _firstOrderFilter_SIG_SIGPREV_MIN_FF,	0x23b0
 !Logging Stuff
 .equ _getMode22PID,							0x55c14
 .equ _udsErrorResponse,						0x52a5a
@@ -43,12 +44,8 @@
 .section Flex_CAN_216_pase_bypass,"ax"
 	nop
 
-!NOTE: This takes over the Mode 22 PID for Evap Purge Percent, commenting it out should disable this
-!.section Mode22EthanolPatch,"ax"
-!	.short _ethanol_content_pcnt
-
 .section Flex_Patch_FuelAirRatio, "ax"
-	.long _fuel_air_ratio
+	.long _fuel_air_ratio_filtered
 	
 .section ExtendedLoggingPatch, "ax" !0x55d08 OLD 					!54C44 for no patch
 	.long _extendedMode22PIDLookup
