@@ -8,56 +8,63 @@ _Start_Ethanol_Tables:
 
 !Ethanol Content to AFR table
 .global _ethanol_content_to_fuel_air_ratio_table_2d
+.global _ethanol_content_x
+.global _fuel_air_ratio_table
 
 _ethanol_content_to_fuel_air_ratio_table_2d:
 	.short 12							!12 rows Ethanol Content
 	.short 0x0000					! float data type
-	.long ethanol_content_x
-	.long fuel_air_ratio_table
+	.long _ethanol_content_x
+	.long _fuel_air_ratio_table
 
-ethanol_content_x:
+_ethanol_content_x:
 	.float 0.0, 5.0, 10.0, 15.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 85.0, 100.0
 
-fuel_air_ratio_table:
+_fuel_air_ratio_table:
 	.float 0.0680, 0.0694, 0.0709,0.0724 ,0.0769, 0.0800, 0.0833, 0.08772 ,0.0934, 0.0990, 0.1020, 0.1111
 	
 	
 !Timing multiplier table based on e content
 .global _ethanol_content_to_timing_mult
+.global _ethanol_content_x_for_timing_mult
+.global _timing_mult_tbl
 
 _ethanol_content_to_timing_mult:
 	.short 12									!12 rows Ethanol Content
 	.short 0x0000								! float data type
-	.long ethanol_content_x_for_timing_mult
-	.long timing_mult
+	.long _ethanol_content_x_for_timing_mult
+	.long _timing_mult_tbl
 
-ethanol_content_x_for_timing_mult:
+_ethanol_content_x_for_timing_mult:
 	.float 0.0, 5.0, 10.0, 15.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 85.0, 100.0
 
-timing_mult:
+_timing_mult_tbl:
 	.float 0.00,0.00,0.34,0.39,0.45,0.51,0.59,0.67,	0.77,0.88,1.00,	1.00
 
 
 !Timing Adder Table Leading - Max E content
 .global _timing_ethanol_adder_leading
+.global _engine_load_e_timing_leading_axis_X
+.global _engine_speed_e_timing_leading_axis_Y
+.global _e_timing_leading_data
 
 _timing_ethanol_adder_leading:
 	.short 20										!Columns X
 	.short 18										!Rows Y
-	.long engine_load_e_timing_leading_axis_X
-	.long engine_speed_e_timing_leading_axis_Y
-	.long e_timing_leading_data
+	.long _engine_load_e_timing_leading_axis_X
+	.long _engine_speed_e_timing_leading_axis_Y
+	.long _e_timing_leading_data
 	.long 0x04000000								!8 bit data
 	.float 0.5										!mult
 	.float -50.0									!offset
 	
-engine_load_e_timing_leading_axis_X:
+_engine_load_e_timing_leading_axis_X:
 	.float 0.06,0.12,0.19,0.25,0.31,0.375,0.438,0.501,0.564,0.627,0.69,0.753,0.816,0.879,0.942,1.005,1.068,1.131,1.194,1.257
 	
-engine_speed_e_timing_leading_axis_Y:
+_engine_speed_e_timing_leading_axis_Y:
 	.float 750,1000,1500,2000,2500,3000,3500,4000,4500,5000,5500,6000,6500,7000,7500,8000,8500,9000
 	
-e_timing_leading_data:
+_e_timing_leading_data:
 	.byte 100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100
 	.byte 100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100
 	.byte 100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100
@@ -80,24 +87,27 @@ e_timing_leading_data:
 
 !Timing Adder Table Trailing - Max E content
 .global _timing_ethanol_adder_trailing
+.global _engine_load_e_timing_trailing_axis_X
+.global _engine_speed_e_timing_trailing_axis_Y
+.global _e_timing_trailing_data
 
 _timing_ethanol_adder_trailing:
 	.short 20										!Columns X
 	.short 18										!Rows Y
-	.long engine_load_e_timing_trailing_axis_X
-	.long engine_speed_e_timing_trailing_axis_Y
-	.long e_timing_trailing_data
+	.long _engine_load_e_timing_trailing_axis_X
+	.long _engine_speed_e_timing_trailing_axis_Y
+	.long _e_timing_trailing_data
 	.long 0x04000000								!8 bit data
 	.float 0.5										!mult
 	.float -50.0									!offset
 	
-engine_load_e_timing_trailing_axis_X:
+_engine_load_e_timing_trailing_axis_X:
 	.float 0.06,0.12,0.19,0.25,0.31,0.375,0.438,0.501,0.564,0.627,0.69,0.753,0.816,0.879,0.942,1.005,1.068,1.131,1.194,1.257
 	
-engine_speed_e_timing_trailing_axis_Y:
+_engine_speed_e_timing_trailing_axis_Y:
 	.float 750,1000,1500,2000,2500,3000,3500,4000,4500,5000,5500,6000,6500,7000,7500,8000,8500,9000
 	
-e_timing_trailing_data:
+_e_timing_trailing_data:
 	.byte 100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100
 	.byte 100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100
 	.byte 100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100

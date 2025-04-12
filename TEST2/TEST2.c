@@ -59,14 +59,16 @@ void getEthanolContentMode22(char service) __attribute__ ((section ("RomHole_For
 void getFlexMultiplierMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
 void getFlexLeadingAdderMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
 void getFlexTrailingAdderMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
+void getFuelAirRatioFilteredMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
 
 //TODO: Move this to end of section
-const Mode22_PID_t extendo_pid[4] __attribute__ ((section ("RomHole_ForPidStruct"))) = 
+const Mode22_PID_t extendo_pid[5] __attribute__ ((section ("RomHole_ForPidStruct"))) = 
 {
 	{0x555,0x2,0x0,0xfffe,0x0000,&getEthanolContentMode22},			//0
 	{0x22b,0x2,0x0,0xfffe,0x0000,&getFlexMultiplierMode22},			//1
 	{0x557,0x2,0x0,0xfffe,0x0000,&getFlexLeadingAdderMode22},		//2
-	{0x558,0x2,0x0,0xfffe,0x0000,&getFlexTrailingAdderMode22}		//3
+	{0x558,0x2,0x0,0xfffe,0x0000,&getFlexTrailingAdderMode22},		//3
+	{0x559,0x2,0x0,0xfffe,0x0000,&getFuelAirRatioFilteredMode22}	//4
 };
 
 
@@ -79,8 +81,8 @@ float func(void) __attribute__ ((section ("RomHole_ForCode")));
 unsigned short i __attribute__ ((section ("RAMHole_forVariables"))) = 0U;
 #endif
 
-const float ethanol_content_sample_thresh_rpm __attribute__ ((section ("RomHole_calibrations"))) = 3100.0f;
-const float ethanol_content_sample_thresh_load __attribute__ ((section ("RomHole_calibrations"))) = 0.750f;
+const float ethanol_content_sample_thresh_rpm __attribute__ ((section ("RomHole_calibrations"))) = 11000.0f;		//Default off
+const float ethanol_content_sample_thresh_load __attribute__ ((section ("RomHole_calibrations"))) = 2.750f;			//Default off
 
 //TODO: These need to not be random RAM vars
 float fuel_air_ratio __attribute__ ((section ("RAMHole_forVariables"))); 
@@ -106,8 +108,6 @@ long timing_adder_leading_ptr __attribute__ ((section ("LeadingPointerPatch"))) 
 
 
 #ifdef NO_DEBUG
-
-float var;
 
 void SetValues() __attribute__ ((section ("Misc")));
 
@@ -296,7 +296,7 @@ int extendedMode22PIDLookup(){
 	pid_found = 0;
 	
 	//G-ROM PID Lookup
-	while(pid_array_count < 4 && pid_found == 0){
+	while(pid_array_count < 5 && pid_found == 0){
 		
 		if(extendo_pid[pid_array_count].pid_id == *uds_pid_data_rx_MAYBE){
 			
@@ -409,6 +409,15 @@ void getFlexTrailingAdderMode22(char service){
 	unsigned int val;
 
 	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(timing_adder_trailing,0.5f,-50.0f);
+	intToUDS_SERVICE_DATA(service,val);
+	
+}
+
+void getFuelAirRatioFilteredMode22(char service){
+	
+	unsigned int val;
+	
+	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(fuel_air_ratio_filtered,0.0000212f,0.0f);
 	intToUDS_SERVICE_DATA(service,val);
 	
 }

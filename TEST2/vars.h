@@ -14,7 +14,6 @@
 #define pid_id_greaterThan_1byte				((char *)0xffffcffc)
 #define stock_pid_man							((Mode22_PID_t *)0x5d994)
 
-
 //CAN 0x216 repurpose
 #define can216rx_byte0		((char*)0xffffbb0c)
 #define can216rx_byte1		((char*)0xffffbb0d)

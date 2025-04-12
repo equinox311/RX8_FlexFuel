@@ -4,7 +4,7 @@
 
 .section RomHole_ForCode,"ax"
 .fill 4
-.string "G-ROM FLEX FUEL APP v1.0"
+.string "G-ROM FLEX FUEL APP v1.1"
 
 .section RomHole_calibrations, "ax"
 .fill 4

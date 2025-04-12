@@ -17,7 +17,6 @@
 .equ _fixedPointToFloat_8bit_MULT_OFF_SIG,	0x2500
 .equ _floatToInt_SIGNAL_MULT_OFFSET,		0x24d0
 .equ _floatToFP_16bit_NUMBER_SCALAR_OFFSET, 0x2490
-.equ _indexLookupSomething,					0x2658
 .equ _can216RXParse,						0x298A4
 .equ _calculateGearRPMbased,				0x2cadc
 .equ _updateFaultStatus,					0x5e644

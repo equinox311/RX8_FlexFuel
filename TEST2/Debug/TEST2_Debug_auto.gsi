@@ -77,10 +77,10 @@ SECTIONS
 	Flex_Patch2 0x000120D4 : AT (0x000120D4)
 	{
 	}
-	TrailingPointerPatch 0x000120E8 : AT (0x000120E8)
+	LeadingPointerPatch 0x000120E8 : AT (0x000120E8)
 	{
 	}
-	LeadingPointerPatch 0x00012178 : AT (0x00012178)
+	TrailingPointerPatch 0x00012178 : AT (0x00012178)
 	{
 	}
 	Flex_Patch_Address 0x00014404 : AT (0x00014404)
