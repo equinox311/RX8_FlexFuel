@@ -25,6 +25,7 @@
 .equ _unknownMode22Func,					0x66aaa
 .equ _mode22Hanlder,						0x54b72
 .equ _firstOrderFilter_SIG_SIGPREV_MIN_FF,	0x23b0
+
 !Logging Stuff
 .equ _getMode22PID,							0x55c14
 .equ _udsErrorResponse,						0x52a5a

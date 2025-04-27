@@ -12,6 +12,7 @@
 #define uds_pid_data_rx_MAYBE					((short*)0xffffcffe)
 #define pid_AND_val								((short*)0xffffd1c8)
 #define pid_id_greaterThan_1byte				((char *)0xffffcffc)
+#define lamda_request_final_ol					((float*)0xffffbecc)
 #define stock_pid_man							((Mode22_PID_t *)0x5d994)
 
 //CAN 0x216 repurpose
