@@ -74,7 +74,7 @@ const Mode22_PID_t extendo_pid[6] __attribute__ ((section ("RomHole_ForPidStruct
 };
 
 
-//Main function for ismulation
+//Main function for simulation
 
 //#define NO_DEBUG
 

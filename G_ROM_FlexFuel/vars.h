@@ -1,7 +1,7 @@
 #ifndef VARS_H
 #define VARS_H
 
-//Variables from the RX8 Software for use 
+//Variables from the RX8 Software for use, probably should make the asm file and these in one file.. 
 #define engine_speed_rpm            			((float*)0xFFFFB594)
 #define coolant_temp_degC						((float*)0xFFFFA9FC)
 #define engine_load_g_rev						((float*)0xFFFFC0D8)
@@ -31,8 +31,8 @@
 
 
 // CAN Stuff Start
+#define flex_message_ram_start	0xFFFFBAF0			//This will need to be a per ROM variable, though it's likely safe for most
 #define flex_sensor_id			0x556
-#define flex_message_ram_start	0xFFFFBAF0
 #define flex_message_byte0		((char*)flex_message_ram_start)
 #define flex_message_byte1		((char*)flex_message_byte0 + 1)
 #define flex_message_byte2		((char*)flex_message_byte1 + 1)
