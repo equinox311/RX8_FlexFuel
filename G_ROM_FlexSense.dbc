@@ -46,6 +46,9 @@ BO_ 1366 FuelMetrics: 8 FlexSense
 
 CM_ SG_ 1366 ValidityByte_AA "This byte must always read 0xAA";
 CM_ SG_ 1366 ValidityByte_55 "This byte must always read 0x55";
+BA_DEF_ BO_  "TxRate" INT 10 10000;
 BA_DEF_  "BusType" STRING ;
+BA_DEF_DEF_  "TxRate" 1000;
 BA_DEF_DEF_  "BusType" "CAN";
+BA_ "TxRate" BO_ 1366 500;
 
