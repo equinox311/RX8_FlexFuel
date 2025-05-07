@@ -1,0 +1,4 @@
+INPUT("C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\RomAddresses.o")
+INPUT("C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o")
+INPUT("C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\flex_calibrations.o")
+INPUT("C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\_section_trailers.o")

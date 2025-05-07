@@ -1,0 +1,4 @@
+"C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\tables_test.s"
+-renesas
+--gdwarf2
+-o "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\tables_test.o"

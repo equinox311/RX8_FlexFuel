@@ -1,0 +1,4 @@
+--compiler-options=-m4,-mb,-mrenesas,-Os,-fdata-sections,-ffunction-sections,-falign-jumps,-fno-function-cse,-funit-at-a-time
+--output="C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\libG_ROM_FlexFuel.a"
+--select-lib=optlib
+--header-files=all

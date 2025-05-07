@@ -1,4 +1,0 @@
-INPUT("C:\WorkSpace\TEST2\TEST2\Release\TEST2.o")
-INPUT("C:\WorkSpace\TEST2\TEST2\Release\tables_test.o")
-INPUT("C:\WorkSpace\TEST2\TEST2\Release\ROMHolesForCode.o")
-INPUT("C:\WorkSpace\TEST2\TEST2\Release\RomAddresses.o")

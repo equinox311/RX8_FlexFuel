@@ -1,0 +1,4 @@
+"C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\RomAddresses.s"
+-renesas
+--gdwarf2
+-o "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\RomAddresses.o"

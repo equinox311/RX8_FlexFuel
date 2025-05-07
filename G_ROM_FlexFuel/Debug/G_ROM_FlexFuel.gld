@@ -1,0 +1,10 @@
+-T "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel_Debug_auto.gsi"
+-T "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel_input.tmp" 
+-L "c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\mrenesas\m4"
+-L "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug"
+-Map "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.map"
+-renesas
+--start-group -l "G_ROM_FlexFuel" -l "gcc-Os-4-200" -l "gcc" --end-group
+-o "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.x"
+-e _ResetHandler
+-N

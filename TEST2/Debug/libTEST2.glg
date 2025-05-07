@@ -1,4 +1,0 @@
---compiler-options=-m4,-mb,-mrenesas,-Os,-fdata-sections,-ffunction-sections,-falign-jumps,-fno-function-cse,-funit-at-a-time
---output="C:\WorkSpace\TEST2\TEST2\Debug\libTEST2.a"
---select-lib=optlib
---header-files=all
