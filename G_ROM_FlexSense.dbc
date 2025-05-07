@@ -1,0 +1,51 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: FlexSense
+
+
+BO_ 1366 FuelMetrics: 8 FlexSense
+ SG_ ValidityByte_AA : 23|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ ValidityByte_55 : 15|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ FuelTemperature : 31|8@0+ (1,40) [40|295] "degC" Vector__XXX
+ SG_ EthanolConent : 7|8@0+ (1,0) [0|255] "%" Vector__XXX
+
+
+
+CM_ SG_ 1366 ValidityByte_AA "This byte must always read 0xAA";
+CM_ SG_ 1366 ValidityByte_55 "This byte must always read 0x55";
+BA_DEF_  "BusType" STRING ;
+BA_DEF_DEF_  "BusType" "CAN";
+
