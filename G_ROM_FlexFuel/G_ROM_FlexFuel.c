@@ -61,16 +61,18 @@ void getFlexLeadingAdderMode22(char service) __attribute__ ((section ("RomHole_F
 void getFlexTrailingAdderMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
 void getFuelAirRatioFilteredMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
 void getOLFuelTargetMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
+void getFlexSensorStatusMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
 
 //TODO: Move this to end of section
-const Mode22_PID_t extendo_pid[6] __attribute__ ((section ("RomHole_ForPidStruct"))) = 
+const Mode22_PID_t extendo_pid[7] __attribute__ ((section ("RomHole_ForPidStruct"))) = 
 {
 	{0x555,0x2,0x0,0xfffe,0x0000,&getEthanolContentMode22},			//0
 	{0x22b,0x2,0x0,0xfffe,0x0000,&getFlexMultiplierMode22},			//1
 	{0x557,0x2,0x0,0xfffe,0x0000,&getFlexLeadingAdderMode22},		//2
 	{0x558,0x2,0x0,0xfffe,0x0000,&getFlexTrailingAdderMode22},		//3
 	{0x559,0x2,0x0,0xfffe,0x0000,&getFuelAirRatioFilteredMode22},	//4
-	{0x55A,0x2,0x0,0xfffe,0x0000,&getOLFuelTargetMode22}			//5
+	{0x55A,0x2,0x0,0xfffe,0x0000,&getOLFuelTargetMode22},			//5
+	{0x55B,0x1,0x0,0xfff1,0x0000,&getFlexSensorStatusMode22}
 };
 
 
@@ -298,7 +300,7 @@ int extendedMode22PIDLookup(){
 	pid_found = 0;
 	
 	//G-ROM PID Lookup
-	while(pid_array_count < 6 && pid_found == 0){
+	while(pid_array_count < 7 && pid_found == 0){
 		
 		if(extendo_pid[pid_array_count].pid_id == *uds_pid_data_rx_MAYBE){
 			
@@ -429,6 +431,15 @@ void getOLFuelTargetMode22(char service){
 	unsigned int val;
 	
 	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(*lamda_request_final_ol,0.00003051758f,0.0f);
+	intToUDS_SERVICE_DATA(service,val);
+	
+}
+
+void getFlexSensorStatusMode22(char service){
+	
+	unsigned int val;
+	
+	val = fixedPointToFloat_8bit_MULT_OFF_SIG(flex_can_valid,1,0.0f);
 	intToUDS_SERVICE_DATA(service,val);
 	
 }
