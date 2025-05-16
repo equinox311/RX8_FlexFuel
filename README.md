@@ -1,3 +1,12 @@
+Currently Supports ROM IDs:
+
+-60E0FC00
+
+-60E0FB00
+
+If you ID is not supported, shoot me a line... let's work on changing that.
+
+
 To use the patching tool:
 
 -Unzip folder contents to a folder
