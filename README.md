@@ -4,7 +4,7 @@ Currently Supports ROM IDs:
 
 -60E0FB00
 
-If you ID is not supported, shoot me a line... let's work on changing that.
+If your ID is not supported, shoot me a line... let's work on changing that.
 
 Features:
 
