@@ -439,7 +439,7 @@ void getFlexSensorStatusMode22(char service){
 	
 	unsigned int val;
 	
-	val = fixedPointToFloat_8bit_MULT_OFF_SIG(flex_can_valid,1,0.0f);
+	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET((!flex_can_valid << 8),1,0);	//NOTE: Inverting for ROMraider, and bit shifted for interface. Interface wanted to align to a 16 bit short... I dunno.... do better probably
 	intToUDS_SERVICE_DATA(service,val);
 	
 }
