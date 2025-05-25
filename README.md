@@ -1,3 +1,23 @@
+Currently Supports ROM IDs:
+
+-60E0FC00
+
+-60E0FB00
+
+If your ID is not supported, shoot me a line... let's work on changing that.
+
+Features:
+
+-Flex Fuel, no fuel map tuning needed
+
+-Immobilizer Removal
+
+-Timing maps scaled by ethanol content
+
+-Extended logging PIDs
+
+-More to come...
+
 To use the patching tool:
 
 -Unzip folder contents to a folder
@@ -12,4 +32,4 @@ To use the patching tool:
 
 
 
-NOTE: USE ALL OF THIS AT YOUR OWN RISK, I HAVEN'T VALIDATED MUCH
+NOTE: USE ALL OF THIS AT YOUR OWN RISK
