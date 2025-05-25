@@ -1,4 +1,6 @@
-Currently Supports ROM IDs:
+Use G_ROM_FlexFuel_V1.2_Release.bin as a stock ROM with flex fuel added. Ready to flash.
+
+Patcher Supports ROM IDs:
 
 -60E0FC00
 
