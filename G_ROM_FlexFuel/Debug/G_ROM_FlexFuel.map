@@ -113,9 +113,9 @@ Flex_CAN_216_pase_bypass
                 0x0000000000029784        0x2 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\RomAddresses.o
 
 Flex_CAN_Unpack_Address
-                0x0000000000029860       0x42
+                0x0000000000029860       0x20
  Flex_CAN_Unpack_Address
-                0x0000000000029860       0x42 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
+                0x0000000000029860       0x20 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
                 0x0000000000029860                flexCANUnpack
 
 Flex_CAN_Unpack_Address_END
@@ -154,32 +154,33 @@ ExtendedLoggingPatch
 ExtendedLoggingCodeHole
 
 RomHole_ForCode
-                0x000000000006b914      0xa59
+                0x000000000006b914      0x8a5
  *(.rodata)
+ *fill*         0x000000000006b914        0xc 
  RomHole_ForCode
-                0x000000000006b914      0xa40 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
-                0x000000000006b914                runFlexFuelCalcs
-                0x000000000006b944                initFlexFuelCalcs
-                0x000000000006b9ec                getEthanolContent
-                0x000000000006bb10                getFlexMetrics
-                0x000000000006bc24                calcTimingAdders
-                0x000000000006bccc                extendedMode22PIDLookup
-                0x000000000006bfd8                getEthanolContentMode22
-                0x000000000006c050                getFlexMultiplierMode22
-                0x000000000006c0cc                getFlexLeadingAdderMode22
-                0x000000000006c14c                getFlexTrailingAdderMode22
-                0x000000000006c1cc                getFuelAirRatioFilteredMode22
-                0x000000000006c248                getOLFuelTargetMode22
-                0x000000000006c2c4                getFlexSensorStatusMode22
+                0x000000000006b920      0x880 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
+                0x000000000006b920                getFlexSensorStatusMode22
+                0x000000000006b9a0                getOLFuelTargetMode22
+                0x000000000006ba00                getFuelAirRatioFilteredMode22
+                0x000000000006ba60                getFlexTrailingAdderMode22
+                0x000000000006bac0                getFlexLeadingAdderMode22
+                0x000000000006bb20                getFlexMultiplierMode22
+                0x000000000006bb80                getEthanolContentMode22
+                0x000000000006bbc0                runFlexFuelCalcs
+                0x000000000006bc60                initFlexFuelCalcs
+                0x000000000006bd00                getEthanolContent
+                0x000000000006bec0                getFlexMetrics
+                0x000000000006bfc0                calcTimingAdders
+                0x000000000006c040                extendedMode22PIDLookup
  RomHole_ForCode
-                0x000000000006c354       0x19 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\_section_trailers.o
+                0x000000000006c1a0       0x19 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\_section_trailers.o
 
 RomHole_calibrations
                 0x000000000006c400      0x531
  RomHole_calibrations
                 0x000000000006c400        0x8 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
-                0x000000000006c400                ethanol_content_sample_thresh_rpm
-                0x000000000006c404                ethanol_content_sample_thresh_load
+                0x000000000006c400                ethanol_content_sample_thresh_load
+                0x000000000006c404                ethanol_content_sample_thresh_rpm
  RomHole_calibrations
                 0x000000000006c408      0x510 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\flex_calibrations.o
                 0x000000000006c408                Start_Ethanol_Tables
@@ -253,19 +254,19 @@ RAMHole_forVariables
                 0x00000000ffffdd00       0x30
  RAMHole_forVariables
                 0x00000000ffffdd00       0x30 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
-                0x00000000ffffdd00                fuel_air_ratio
-                0x00000000ffffdd04                fuel_air_ratio_filtered
-                0x00000000ffffdd08                timing_mult
-                0x00000000ffffdd0c                timing_adder_trailing
-                0x00000000ffffdd10                timing_adder_leading
-                0x00000000ffffdd14                ethanol_content_pcnt
-                0x00000000ffffdd18                ethanol_content_last_valid_pcnt
-                0x00000000ffffdd1c                flex_can_valid
-                0x00000000ffffdd1d                flex_can_valid_prevLoop
-                0x00000000ffffdd20                alive_count
-                0x00000000ffffdd24                fuel_air_ratio_FF
-                0x00000000ffffdd28                timing_mult_filtered
-                0x00000000ffffdd2c                timing_mult_FF
+                0x00000000ffffdd00                timing_mult_FF
+                0x00000000ffffdd04                timing_mult_filtered
+                0x00000000ffffdd08                fuel_air_ratio_FF
+                0x00000000ffffdd0c                alive_count
+                0x00000000ffffdd10                flex_can_valid_prevLoop
+                0x00000000ffffdd11                flex_can_valid
+                0x00000000ffffdd14                ethanol_content_last_valid_pcnt
+                0x00000000ffffdd18                ethanol_content_pcnt
+                0x00000000ffffdd1c                timing_adder_leading
+                0x00000000ffffdd20                timing_adder_trailing
+                0x00000000ffffdd24                timing_mult
+                0x00000000ffffdd28                fuel_air_ratio_filtered
+                0x00000000ffffdd2c                fuel_air_ratio
 LOAD C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\RomAddresses.o
 LOAD C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
 LOAD C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\flex_calibrations.o
@@ -277,17 +278,17 @@ LOAD c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\lib\g
 END GROUP
 OUTPUT(C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.x elf32-sh)
 
-.debug_line     0x0000000000000000      0x1d8
+.debug_line     0x0000000000000000      0x1fe
  .debug_line    0x0000000000000000       0x69 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\RomAddresses.o
- .debug_line    0x0000000000000069      0x16f C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
+ .debug_line    0x0000000000000069      0x195 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
 
-.debug_info     0x0000000000000000      0x6f1
+.debug_info     0x0000000000000000      0x9e9
  .debug_info    0x0000000000000000       0x9e C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\RomAddresses.o
- .debug_info    0x000000000000009e      0x653 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
+ .debug_info    0x000000000000009e      0x94b C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
 
-.debug_abbrev   0x0000000000000000      0x1a8
+.debug_abbrev   0x0000000000000000      0x24f
  .debug_abbrev  0x0000000000000000       0x14 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\RomAddresses.o
- .debug_abbrev  0x0000000000000014      0x194 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
+ .debug_abbrev  0x0000000000000014      0x23b C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
 
 .debug_aranges  0x0000000000000000       0xa8
  .debug_aranges
@@ -295,11 +296,11 @@ OUTPUT(C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.x elf32-s
  .debug_aranges
                 0x0000000000000020       0x88 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
 
-.debug_loc      0x0000000000000000      0x364
- .debug_loc     0x0000000000000000      0x364 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
+.debug_loc      0x0000000000000000      0x503
+ .debug_loc     0x0000000000000000      0x503 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
 
-.debug_ranges   0x0000000000000000       0x78
- .debug_ranges  0x0000000000000000       0x78 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
+.debug_ranges   0x0000000000000000       0x90
+ .debug_ranges  0x0000000000000000       0x90 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
 
 .debug_str      0x0000000000000000      0x53a
  .debug_str     0x0000000000000000      0x53a C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
@@ -309,13 +310,13 @@ OUTPUT(C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.x elf32-s
  .comment       0x0000000000000000       0x1c C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
                                          0x1d (size before relaxing)
 
-.debug_frame    0x0000000000000000      0x1c8
- .debug_frame   0x0000000000000000      0x1c8 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
+.debug_frame    0x0000000000000000      0x1d4
+ .debug_frame   0x0000000000000000      0x1d4 C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o
 
 
 ==============================================================
 
-Listfile generated by KPIT GNUSH [ELF]-v13.01 on Sunday, May 25, 2025, 13:02:01
+Listfile generated by KPIT GNUSH [ELF]-v13.01 on Sunday, November 09, 2025, 23:30:40
 
 Build options:
 

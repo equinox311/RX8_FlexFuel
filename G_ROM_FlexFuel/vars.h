@@ -4,7 +4,8 @@
 //Variables from the RX8 Software for use, probably should make the asm file and these in one file.. 
 #define engine_speed_rpm            			((float*)0xFFFFB594)
 #define coolant_temp_degC						((float*)0xFFFFA9FC)
-#define engine_load_g_rev						((float*)0xFFFFC0D8)
+#define engine_load_g_rev						((float*)0xffffc0d8)
+#define baro_compensated_actual_lambda			((float*)0xffffaad0)
 #define relative_manifold_pressure2_kPa			((float*)0xFFFFBE24)
 #define coolant_temp_post_fault_detection_degC	((float*)0xFFFFA9FC)
 #define ignition_leading_base_final_deg			((float*)0xffffa5ec)
@@ -28,6 +29,20 @@
 
 #define can_216_rx_timer	((char*)0xffffbaf8)
 
+
+//CAN 0x41 repurpose
+//#define can41TX_byte0			((char*)0xffffc4c4)
+//#define can41TX_byte1			((char*)0xffffc4c5)
+//#define can41TX_byte2			((char*)0xffffc4c6)
+//#define can41TX_byte3			((char*)0xffffc4c7)
+//#define can41TX_byte4			((char*)0xffffc4c8)
+//#define can41TX_byte5			((char*)0xffffc4c9)
+//#define can41TX_byte6			((char*)0xffffc4ca)
+//#define can41TX_byte7			((char*)0xffffc4cb)
+
+//#define can_41_event_ID			((long*)0x4baa4)
+//#define metrics_can_ram_start 	0xffffc4c4
+//#define metrics_can_id			0x558
 
 
 // CAN Stuff Start

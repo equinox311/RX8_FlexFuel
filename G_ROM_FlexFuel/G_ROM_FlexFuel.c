@@ -14,6 +14,8 @@
 #include "vars.h"
 
 
+//#define USE_METRIC_CAN_PATCH
+
 #define BASE_FUEL_AIR_RATIO			0.07196f
 #define ETHANOL_CONTENT_MIN			0.0f
 #define ETHANOL_CONTENT_MAX			100.0f
@@ -32,6 +34,17 @@ const CAN_Message_Setup_t flex_can_setup __attribute__ ((section ("FlexCANStruct
 	0x1000000
 };
 
+#ifdef USE_METRIC_CAN_PATCH
+const CAN_Message_Setup_t metrics_can_setup __attribute__ ((section ("can41txPatch_CANStruct"))) = {
+	metrics_can_id,
+	0x0,
+	0x09,
+	0x8,
+	0x0,
+	metrics_can_ram_start,
+	0x1000000
+};
+#endif
 
 
 //CAN unpack
@@ -62,6 +75,7 @@ void getFlexTrailingAdderMode22(char service) __attribute__ ((section ("RomHole_
 void getFuelAirRatioFilteredMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
 void getOLFuelTargetMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
 void getFlexSensorStatusMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
+void can41GROMPack(void) __attribute__ ((section ("RomHole_ForCode")));
 
 //TODO: Move this to end of section
 const Mode22_PID_t extendo_pid[7] __attribute__ ((section ("RomHole_ForPidStruct"))) = 
@@ -104,12 +118,23 @@ float timing_mult_filtered __attribute__ ((section ("RAMHole_forVariables")));
 float timing_mult_FF __attribute__ ((section ("RAMHole_forVariables")));//16ms update rate ish
 
 
+#ifdef USE_METRIC_CAN_PATCH
+char grom_can_tx_patch_tx_count __attribute__ ((section ("RAMHole_forVariables"))) = 0U;
+int engine_load_for_metrics_can __attribute__ ((section ("RAMHole_forVariables")));
+//int front_o2_lambda_for_metrics_can __attribute__ ((section ("RAMHole_forVariables")));
+float engine_load_for_can_g_rev __attribute__ ((section ("RAMHole_forVariables")));
+#endif
+
 char flex_can_timeout_counts  __attribute__ ((section ("Flex_CAN_Timeout_Val"))) = 100; //30ms-ish task rate for can timers
+
 
 //Setup patches for new adder pointers 
 long timing_adder_trailing_ptr  __attribute__ ((section ("TrailingPointerPatch"))) = &timing_adder_trailing;
 long timing_adder_leading_ptr __attribute__ ((section ("LeadingPointerPatch")))  = &timing_adder_leading;
 
+#ifdef USE_METRIC_CAN_PATCH
+long can41TXPackPatch_ptr __attribute__ ((section ("can41TXPackPatch")))  = &can41GROMPack;
+#endif
 
 #ifdef NO_DEBUG
 
@@ -141,17 +166,25 @@ float func(){
 	
 	//highLevelInit();
 	initFlexFuelCalcs();
+	
+	//NOTE: Dumping shit in here as an init
+	engine_load_for_can_g_rev = *engine_load_g_rev;
+	engine_load_for_metrics_can = 0U;
+	grom_can_tx_patch_tx_count = 0U;
+	
 	while(1){
-		//SetValues();
-		getFlexMetrics();
+		SetValues();
+		can41GROMPack();
+		//getFlexMetrics();
 		//flexCANUnpack();	//NOTE: This happens in a different task, but for simulation I guess this is the best I can do..
 
-		int var = extendedMode22PIDLookup();
-		i=i+1;
-		if(i >= 255 && i < 256){
-			i=0;
-		}
-	delay_ms(15);
+		//int var = extendedMode22PIDLookup();
+		//i=i+1;
+		//if(i >= 255 && i < 256){
+		//	i=0;
+		//}
+		delay_ms(15);
+	
 
 	}
 	
@@ -188,6 +221,7 @@ void initFlexFuelCalcs(){
 	timing_mult_FF = 0.002;
 	//NOTE: This interface doesn't work and isn't known yet updateFaultStatus(flex_fault_index,FAULTED);
 	flex_can_valid_prevLoop = flex_can_valid;
+		
 }
 
 void getEthanolContent(){
@@ -222,10 +256,10 @@ void getEthanolContent(){
 	
 	
 	//Set boundries
-	if(ethanol_content_pcnt < ETHANOL_CONTENT_MIN){
+	if(ethanol_content_pcnt <= ETHANOL_CONTENT_MIN){
 		ethanol_content_pcnt = ETHANOL_CONTENT_MIN;
 	}
-	else if(ethanol_content_pcnt > ETHANOL_CONTENT_MAX){
+	else if(ethanol_content_pcnt >= ETHANOL_CONTENT_MAX){
 		ethanol_content_pcnt = ETHANOL_CONTENT_MAX;
 	}
 	
@@ -263,16 +297,11 @@ void flexCANUnpack(){
 	*can216rx_byte1 = *flex_message_byte1;
 	*can216rx_byte2 = *flex_message_byte2;
 	
-	//This is for function padding, though it likely doesn't matter... this shit is BAD
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	asm("nop");
+	return;
+	
+	//This function needs to be filled with something in the factory ROM, or else there is dead code running around
+	//In theory not an issue, but...
+	
 
 }
 
@@ -443,7 +472,44 @@ void getFlexSensorStatusMode22(char service){
 	intToUDS_SERVICE_DATA(service,val);
 	
 }
+#ifdef USE_METRIC_CAN_PATCH
 
+void can41GROMGet(){
+	
+	int val = 0U;
+	
+	//TODO: Maybe make scalars variables if used more than once
+	//val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(*engine_load_g_rev,0.003921568f,0.0f);
+	engine_load_for_metrics_can = val;
+	
+	//val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(*baro_compensated_actual_lambda,0.000030517578f,0.0f);
+	//front_o2_lambda_for_metrics_can = val;
+	
+}
+
+void can41GROMPack(){
+
+	grom_can_tx_patch_tx_count = grom_can_tx_patch_tx_count + 1;
+	
+	//This should give this a 100ms tx rate
+	if(grom_can_tx_patch_tx_count > 24){
+		can41GROMGet();
+		*can41TX_byte0 = 1;
+		*can41TX_byte1 = 2;
+		*can41TX_byte2 = 3;
+		*can41TX_byte3 = 4;
+		*can41TX_byte4 = 5;
+		*can41TX_byte5 = 6;
+		*can41TX_byte6 = 7;
+		*can41TX_byte7 = 8;
+		txCAN_EventBased(can_41_event_ID);		//this gives the pointer to the function
+		grom_can_tx_patch_tx_count = 0;
+	}
+	
+}
+
+
+#endif
 
 
 

@@ -7,7 +7,7 @@
 .global _highLevelInit,_initFlexFuelCalcs,_fixedPointToFloat_8bit_MULT_OFF_SIG,_indexLookupSomething, _can216RXParse
 .global _calculateGearRPMbased, _updateFaultStatus, _getMode22PID, _floatToInt_SIGNAL_MULT_OFFSET, _udsErrorResponse,_extendUDSDataReponse
 .global _intToUDS_SERVICE_DATA, _floatToFP_16bit_NUMBER_SCALAR_OFFSET, _unknownMode22Func,_mode22Hanlder,_byteToUDS_SERVICE_DATA
-.global _firstOrderFilter_SIG_SIGPREV_MIN_FF
+.global _firstOrderFilter_SIG_SIGPREV_MIN_FF, _txCAN_EventBased, _CANTX_Main, _getMode22EngineLoad
 
 
 !Function Addresses in ROM variant
@@ -31,7 +31,8 @@
 .equ _getMode22PID,							0x55c14
 .equ _udsErrorResponse,						0x52a5a
 .equ _extendUDSDataReponse,					0x55d24
-
+.equ _txCAN_EventBased,						0x99b0
+.equ _getMode22EngineLoad,					0x53a3a
 
 !Patched section addresses from linker
 .section Flex_Patch_Address, "ax"
@@ -43,6 +44,7 @@
 .section Ethanol_Content_Update,"ax"
 .long _getEthanolContent
 
+!This turns the function call for the OEM 0x216 CAN RX into a no op, so we don't parse data into a section of RAM we can't use
 .section Flex_CAN_216_pase_bypass,"ax"
 	nop
 
@@ -56,5 +58,6 @@
 !	jsr @r10
 !	nop
 
-!.section ExtendedLoggingCodeHole, "ax"
-!	.short _extendedMode22PIDLookup_ptr
+!NOTE: Testing only
+!.section can41TXPackPatch, "ax"
+!	.long _can41GROMPack
