@@ -124,6 +124,8 @@
 "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\RomAddresses.s" "User" "Assembly source file" 2 
 "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\_section_trailers.s" "User" "Assembly source file" 2 
 "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\flex_calibrations.s" "User" "Assembly source file" 2 
+"C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\pid_handler.c" "User" "C source file" 2 
+"C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\pid_handler.h" "User" "C header file" 2 
 "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\simulation_handlers.s" "User" "Assembly source file" 2 
 "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\typedefine.h" "User" "C header file" 2 
 "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\vars.h" "User" "C header file" 2 
@@ -148,22 +150,23 @@
 "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\flex_calibrations.s" "0f80484d1cebbd10" 3 
 "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\simulation_handlers.s" "0a35ef5b5cebbd10" 3 
 [OPTIONS_Debug_GNU Compiler]
-"C source file" "0eebe5dafc15cd10" 2 
-"C++ source file" "0eebe5dafc15cd10" 2 
-"C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\G_ROM_FlexFuel.c" "0eebe5dafc15cd10" 2 
-"Preprocess Assembly file" "0eebe5dafc15cd10" 2 
+"C source file" "098b10840035cd10" 2 
+"C++ source file" "098b10840035cd10" 2 
+"C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\G_ROM_FlexFuel.c" "098b10840035cd10" 2 
+"C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\pid_handler.c" "0ecf65621035cd10" 2 
+"Preprocess Assembly file" "098b10840035cd10" 2 
 [OPTIONS_Debug_GNU Library Generator]
 "Single Shot" "02ea28714598bd10" 1 
 [OPTIONS_Debug_GNU Linker]
-"Single Shot" "00ab4edb5cebbd10" 4 
+"Single Shot" "012775621035cd10" 4 
 [OPTIONS_Debug]
 "" 0 
-"[V|VERSION|2] [B|DOEXTF|1] [S|INCDIR|^"$(TCINSTALL)\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\mrenesas\m4^"|^"$(CONFIGDIR)^"] [B|RSARCH|1] [B|FIXUPLIBS|1] [S|ARCHIVE|libgcc.a*libgcc-Os-4-200.a*lib$(PROJECTNAME).a] [S|OUTFORM|BOTH] [B|MFILEGEN|1] [S|PLMFILE|^"$(CONFIGDIR)\$(PROJECTNAME).map^"] [S|OUTFILE|^"$(CONFIGDIR)\$(PROJECTNAME).x^"] [S|GROUPDET|Zero|0|0||1|0x00000000|0|1|0|.vects|All-files|<<FEND>>|<<CEND>>|<<GEND>>|INTHanlder|0|0||1|0x00000100|0|0|<<CEND>>|<<GEND>>|.text|0|0||1|0x00001000|0|0|0|.text|All-files|<<FEND>>|0|.text.*|All-files|<<FEND>>|1|etext|<<FEND>>|<<CEND>>|<<GEND>>|.init|0|0||0||0|0|0|.init|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.fini|0|0||0||0|0|0|.fini|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.got|0|0||0||0|0|0|.got|All-files|<<FEND>>|0|.got.plt|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.rodata|0|0||0||0|0|0|.rodata|All-files|<<FEND>>|0|.rodata.*|All-files|<<FEND>>|1|_erodata|<<FEND>>|<<CEND>>|<<GEND>>|.eh_frame_hdr|0|0||0||0|0|0|.eh_frame_hdr|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.eh_frame|0|0||0||0|0|0|.eh_frame|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.jcr|0|0||0||0|0|0|.jcr|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.tors|0|0||0||0|0|1|__CTOR_LIST__|<<FEND>>|1|___ctors|<<FEND>>|0|.ctors|All-files|<<FEND>>|1|___ctors_end|<<FEND>>|1|__CTOR_END__|<<FEND>>|1|__DTOR_LIST__|<<FEND>>|1|___dtors|<<FEND>>|0|.dtors|All-files|<<FEND>>|1|___dtors_end|<<FEND>>|1|__DTOR_END__|<<FEND>>|1|_mdata|<<FEND>>|<<CEND>>|<<GEND>>|RomHeader|0|0||1|0x00002000|0|0|<<CEND>>|<<GEND>>|RSTHandler|0|0||1|0x00004000|0|0|<<CEND>>|<<GEND>>|kill_1|0|0||1|0x00011166|0|0|<<CEND>>|<<GEND>>|kill_2|0|0||1|0x0001119C|0|0|<<CEND>>|<<GEND>>|Flex_Init_Address|0|0||1|0x00011340|0|0|<<CEND>>|<<GEND>>|Flex_Patch2|0|0||1|0x000120D4|0|0|<<CEND>>|<<GEND>>|LeadingPointerPatch|0|0||1|0x000120E8|0|0|<<CEND>>|<<GEND>>|TrailingPointerPatch|0|0||1|0x00012178|0|0|<<CEND>>|<<GEND>>|Flex_Patch_Address|0|0||1|0x00014404|0|0|<<CEND>>|<<GEND>>|Ethanol_Content_Update|0|0||1|0x0001A938|0|0|<<CEND>>|<<GEND>>|Flex_CAN_216_pase_bypass|0|0||1|0x00029784|0|0|<<CEND>>|<<GEND>>|Flex_CAN_Unpack_Address|0|1|0x00029860|1|0x00029860|0|0|<<CEND>>|<<GEND>>|Flex_CAN_Unpack_Address_END|0|0||1|0x000298A2|0|0|<<CEND>>|<<GEND>>|Flex_Patch_FuelAirRatio|0|0||1|0x00030CCC|0|0|<<CEND>>|<<GEND>>|FlexCANStruct|0|0||1|0x0004BD24|0|0|<<CEND>>|<<GEND>>|Mode22EthanolPatch|0|0||1|0x000538AC|0|0|<<CEND>>|<<GEND>>|ExtendedLoggingPatch|0|0||1|0x00054C44|0|0|<<CEND>>|<<GEND>>|ExtendedLoggingCodeHole|0|0||1|0x00055E02|0|0|<<CEND>>|<<GEND>>|RomHole_ForCode|0|0||1|0x0006B914|0|0|0|.rodata|All-files|<<FEND>>|<<CEND>>|<<GEND>>|RomHole_calibrations|0|0||1|0x0006C400|0|0|<<CEND>>|<<GEND>>|RomHole_ForPidStruct|0|0||1|0x0006CCC0|0|0|<<CEND>>|<<GEND>>|CalHeader|0|0||1|0x0006D346|0|0|<<CEND>>|<<GEND>>|Flex_CAN_Timeout_Val|0|0||1|0x0006D485|0|0|<<CEND>>|<<GEND>>|Misc|0|0||1|0x00080000|0|0|<<CEND>>|<<GEND>>|.stack|0|0||1|0x73FFFBF0|0|0|1|_stack|<<FEND>>|<<CEND>>|<<GEND>>|.data|0|2|_mdata|1|0xFFFF6000|0|0|1|_data|<<FEND>>|0|.data|All-files|<<FEND>>|0|.data.*|All-files|<<FEND>>|1|_edata|<<FEND>>|<<CEND>>|<<GEND>>|.gcc_exc|0|0||0||0|0|0|.gcc_exc|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.bss|0|0||0||0|0|1|_bss|<<FEND>>|0|.bss|All-files|<<FEND>>|0|.bss.*|All-files|<<FEND>>|0|COMMON|All-files|<<FEND>>|1|_ebss|<<FEND>>|1|_end|<<FEND>>|<<CEND>>|<<GEND>>|RAMHole_forVariables|0|0||1|0xFFFFDD00|0|0|<<CEND>>|<<GEND>>|] [S|APPTXT|^"-e _ResetHandler
+"[V|VERSION|2] [B|DOSEGF|1] [S|EXTFILE|^"C:\WorkSpace\G_ROM_FlexFuel\linker_stuff.gsi^"] [S|INCDIR|^"$(TCINSTALL)\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\mrenesas\m4^"|^"$(CONFIGDIR)^"] [B|RSARCH|1] [B|FIXUPLIBS|1] [S|ARCHIVE|libgcc.a*libgcc-Os-4-200.a*lib$(PROJECTNAME).a] [S|OUTFORM|BOTH] [B|MFILEGEN|1] [S|PLMFILE|^"$(CONFIGDIR)\$(PROJECTNAME).map^"] [S|OUTFILE|^"$(CONFIGDIR)\$(PROJECTNAME).x^"] [S|GROUPDET|Zero|0|0||1|0x00000000|0|1|0|.vects|All-files|<<FEND>>|<<CEND>>|<<GEND>>|INTHanlder|0|0||1|0x00000100|0|0|<<CEND>>|<<GEND>>|.text|0|0||1|0x00001000|0|0|0|.text|All-files|<<FEND>>|0|.text.*|All-files|<<FEND>>|1|etext|<<FEND>>|<<CEND>>|<<GEND>>|.init|0|0||0||0|0|0|.init|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.fini|0|0||0||0|0|0|.fini|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.got|0|0||0||0|0|0|.got|All-files|<<FEND>>|0|.got.plt|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.rodata|0|0||0||0|0|0|.rodata|All-files|<<FEND>>|0|.rodata.*|All-files|<<FEND>>|1|_erodata|<<FEND>>|<<CEND>>|<<GEND>>|.eh_frame_hdr|0|0||0||0|0|0|.eh_frame_hdr|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.eh_frame|0|0||0||0|0|0|.eh_frame|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.jcr|0|0||0||0|0|0|.jcr|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.tors|0|0||0||0|0|1|__CTOR_LIST__|<<FEND>>|1|___ctors|<<FEND>>|0|.ctors|All-files|<<FEND>>|1|___ctors_end|<<FEND>>|1|__CTOR_END__|<<FEND>>|1|__DTOR_LIST__|<<FEND>>|1|___dtors|<<FEND>>|0|.dtors|All-files|<<FEND>>|1|___dtors_end|<<FEND>>|1|__DTOR_END__|<<FEND>>|1|_mdata|<<FEND>>|<<CEND>>|<<GEND>>|RomHeader|0|0||1|0x00002000|0|0|<<CEND>>|<<GEND>>|RSTHandler|0|0||1|0x00004000|0|0|<<CEND>>|<<GEND>>|kill_1|0|0||1|0x00011166|0|0|<<CEND>>|<<GEND>>|kill_2|0|0||1|0x0001119C|0|0|<<CEND>>|<<GEND>>|Flex_Init_Address|0|0||1|0x00011340|0|0|<<CEND>>|<<GEND>>|Flex_Patch2|0|0||1|0x000120D4|0|0|<<CEND>>|<<GEND>>|LeadingPointerPatch|0|0||1|0x000120E8|0|0|<<CEND>>|<<GEND>>|TrailingPointerPatch|0|0||1|0x00012178|0|0|<<CEND>>|<<GEND>>|Flex_Patch_Address|0|0||1|0x00014404|0|0|<<CEND>>|<<GEND>>|Ethanol_Content_Update|0|0||1|0x0001A938|0|0|<<CEND>>|<<GEND>>|Flex_CAN_216_pase_bypass|0|0||1|0x00029784|0|0|<<CEND>>|<<GEND>>|Flex_CAN_Unpack_Address|0|1|0x00029860|1|0x00029860|0|0|<<CEND>>|<<GEND>>|Flex_CAN_Unpack_Address_END|0|0||1|0x000298A2|0|0|<<CEND>>|<<GEND>>|Flex_Patch_FuelAirRatio|0|0||1|0x00030CCC|0|0|<<CEND>>|<<GEND>>|FlexCANStruct|0|0||1|0x0004BD24|0|0|<<CEND>>|<<GEND>>|Mode22EthanolPatch|0|0||1|0x000538AC|0|0|<<CEND>>|<<GEND>>|ExtendedLoggingPatch|0|0||1|0x00054C44|0|0|<<CEND>>|<<GEND>>|ExtendedLoggingCodeHole|0|0||1|0x00055E02|0|0|<<CEND>>|<<GEND>>|RomHole_ForCode|0|0||1|0x0006B914|0|0|0|.rodata|All-files|<<FEND>>|<<CEND>>|<<GEND>>|RomHole_calibrations|0|0||1|0x0006C400|0|0|<<CEND>>|<<GEND>>|RomHole_ForPidStruct|0|0||1|0x0006CCC0|0|0|<<CEND>>|<<GEND>>|CalHeader|0|0||1|0x0006D346|0|0|<<CEND>>|<<GEND>>|Flex_CAN_Timeout_Val|0|0||1|0x0006D485|0|0|<<CEND>>|<<GEND>>|Misc|0|0||1|0x00080000|0|0|<<CEND>>|<<GEND>>|.stack|0|0||1|0x73FFFBF0|0|0|1|_stack|<<FEND>>|<<CEND>>|<<GEND>>|.data|0|2|_mdata|1|0xFFFF6000|0|0|1|_data|<<FEND>>|0|.data|All-files|<<FEND>>|0|.data.*|All-files|<<FEND>>|1|_edata|<<FEND>>|<<CEND>>|<<GEND>>|.gcc_exc|0|0||0||0|0|0|.gcc_exc|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.bss|0|0||0||0|0|1|_bss|<<FEND>>|0|.bss|All-files|<<FEND>>|0|.bss.*|All-files|<<FEND>>|0|COMMON|All-files|<<FEND>>|1|_ebss|<<FEND>>|1|_end|<<FEND>>|<<CEND>>|<<GEND>>|RAMHole_forVariables|0|0||1|0xFFFFDD00|0|0|<<CEND>>|<<GEND>>|] [S|APPTXT|^"-e _ResetHandler
 -N^"] [S|CPUTYPE|SH4] [S|ENDIAN|BIG] [B|MRENESAS|1] [S|PROJECTTYPE|CAPPPROJECT] [B|DOOPTLIB|1] [B|DOPROJBUILT|1]
 " 4 
 "[V|VERSION|2] [I|DEBUGLV|2] [S|OBJPATH|^"$(CONFIGDIR)\$(FILELEAF).o^"] [B|LINCASS|1] [B|LINCSYM|1] [B|LINCHLS|1] [S|CPUTYPE|SH4] [S|ENDIAN|BIG] [B|MRENESAS|1] [S|PROJECTTYPE|CAPPPROJECT]
 " 3 
-"[V|VERSION|2] [S|INCDIR|^"$(TCINSTALL)\sh-elf\sh-elf\optlibinc^"|^"$(TCINSTALL)\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\optlibinc^"] [S|DEFINES|DEBUG] [S|OUTPUT|OBJECT] [S|OBJPATH|^"$(CONFIGDIR)\$(FILELEAF).o^"] [B|DEBUG|1] [S|DEBUGFT|Native] [I|DEBUGLV|2] [S|ALIGN4|ALL] [B|OPTIMIZE|1] [B|LTO|0] [I|OPTLV|3] [B|NOSTDINC|1] [B|FILFUNCS|1] [S|CPUTYPE|SH4] [S|ENDIAN|BIG] [B|MRENESAS|1] [S|PROJECTTYPE|CAPPPROJECT] [B|DOOPTLIB|1]
+"[V|VERSION|2] [S|INCDIR|^"$(TCINSTALL)\sh-elf\sh-elf\optlibinc^"|^"$(TCINSTALL)\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\optlibinc^"] [S|DEFINES|DEBUG] [S|OUTPUT|OBJECT] [S|OBJPATH|^"$(CONFIGDIR)\$(FILELEAF).o^"] [B|DEBUG|1] [S|DEBUGFT|Native] [I|DEBUGLV|2] [S|ALIGN4|ALL] [B|OPTIMIZE|0] [B|LTO|0] [I|OPTLV|1] [B|NOSTDINC|1] [B|FILFUNCS|1] [S|CPUTYPE|SH4] [S|ENDIAN|BIG] [B|MRENESAS|1] [S|PROJECTTYPE|CAPPPROJECT] [B|DOOPTLIB|1]
 " 2 
 "[V|VERSION|2] [S|MODE|BUILD/CHANGED] [B|CTYPE|1] [B|MATH|1] [B|STDIO|1] [B|STDLIB|1] [B|STRING|1] [B|DOPROJBUILT|1] [B|DOOPTLIB|1] [S|OUTPUTPATH|^"$(CONFIGDIR)\lib$(PROJECTNAME).a^"] [B|OPTIMIZE|1] [I|OPTTYPE|1] [S|CPUTYPE|SH4] [S|ENDIAN|BIG] [B|MRENESAS|1]
 " 1 
@@ -181,11 +184,12 @@
 "C source file" "061ae7b56686bd10" 2 
 "C++ source file" "061ae7b56686bd10" 2 
 "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\G_ROM_FlexFuel.c" "05daf9f01cebbd10" 2 
+"C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\pid_handler.c" "0ecf65621035cd10" 2 
 "Preprocess Assembly file" "061ae7b56686bd10" 2 
 [OPTIONS_Release_GNU Library Generator]
 "Single Shot" "061ae7b56686bd10" 1 
 [OPTIONS_Release_GNU Linker]
-"Single Shot" "0d8cef5b5cebbd10" 4 
+"Single Shot" "012775621035cd10" 4 
 [OPTIONS_Release]
 "" 0 
 "[V|VERSION|2] [S|OBJPATH|^"$(CONFIGDIR)\$(FILELEAF).o^"] [I|DEBUGLV|0] [B|LINCHLS|1] [B|LINCASS|1] [B|LINCSYM|1] [S|LFILE|^"$(CONFIGDIR)\$(FILELEAF).^"] [S|PROJECTTYPE|CAPPPROJECT] [S|INCDIR|^"$(PROJDIR)^"] [S|CPUTYPE|SH2A] [S|ENDIAN|BIG] [S|ROUND|ZERO] [S|ROUND|ZERO] " 3 
@@ -206,11 +210,12 @@
 "C source file" "061ae7b56686bd10" 2 
 "C++ source file" "061ae7b56686bd10" 2 
 "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\G_ROM_FlexFuel.c" "05daf9f01cebbd10" 2 
+"C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\pid_handler.c" "0ecf65621035cd10" 2 
 "Preprocess Assembly file" "061ae7b56686bd10" 2 
 [OPTIONS_SimDebug_SH2A-FPU_Cycle_GNU Library Generator]
 "Single Shot" "061ae7b56686bd10" 1 
 [OPTIONS_SimDebug_SH2A-FPU_Cycle_GNU Linker]
-"Single Shot" "0d8cef5b5cebbd10" 4 
+"Single Shot" "012775621035cd10" 4 
 [OPTIONS_SimDebug_SH2A-FPU_Cycle]
 "" 0 
 "[V|VERSION|2] [S|OBJPATH|^"$(CONFIGDIR)\$(FILELEAF).o^"] [I|DEBUGLV|2] [B|LINCHLS|1] [B|LINCASS|1] [B|LINCSYM|1] [S|LFILE|^"$(CONFIGDIR)\$(FILELEAF).^"] [S|PROJECTTYPE|CAPPPROJECT] [S|INCDIR|^"$(PROJDIR)^"] [S|CPUTYPE|SH2A] [S|ENDIAN|BIG] [S|ROUND|ZERO] [S|ROUND|ZERO] " 3 

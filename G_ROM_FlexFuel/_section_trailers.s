@@ -3,10 +3,10 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 .section RomHole_ForCode,"ax"
-.string "G-ROM FLEX FUEL APP v1.2"
+.string "G-ROM FLEX FUEL APP v1.3"
 
 .section RomHole_calibrations, "ax"
-.string "G-ROM FLEX FUEL CAL v1.0"
+.string "G-ROM FLEX FUEL CAL v1.1"
 
 .section RomHeader,"ax"
 .string "G-ROM_FLEX"

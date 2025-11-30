@@ -19,9 +19,9 @@
 #define BASE_FUEL_AIR_RATIO			0.07196f
 #define ETHANOL_CONTENT_MIN			0.0f
 #define ETHANOL_CONTENT_MAX			100.0f
+#define CRANKING_FUEL_MULT_MIN		1.0f
+#define CRANKING_FUEL_MULT_MAX		4.0f
 
-//Logging
-#define EXTENDED_PID_SIZE			sizeof(extendo_pid)/sizeof(extendo_pid[2])		//TODO: Make this a sizeof call
 
 //CAN setup
 const CAN_Message_Setup_t flex_can_setup __attribute__ ((section ("FlexCANStruct"))) = {
@@ -50,7 +50,6 @@ const CAN_Message_Setup_t metrics_can_setup __attribute__ ((section ("can41txPat
 //CAN unpack
 void flexCANUnpack(void) __attribute__ ((section ("Flex_CAN_Unpack_Address")));
 
-
 //Inits for flex based vars
 void initFlexFuelCalcs(void) __attribute__ ((section ("RomHole_ForCode")));
 
@@ -63,31 +62,14 @@ void getFlexMetrics(void) __attribute__ ((section ("RomHole_ForCode")));
 //Calculates timing adders
 void calcTimingAdders(void) __attribute__ ((section ("RomHole_ForCode")));
 
+//Calculates cranking fuel multipliers
+void getCrankingFuelMult(void) __attribute__ ((section ("RomHole_ForCode")));
+
+//Overwrites OEM cranking IPW function
+void setCrankingInjectorPulseTime_FlexFuel(void) __attribute__ ((section ("RomHole_ForCode")));
+
 //Get Ethanol Content from CAN message
 void getEthanolContent(void) __attribute__ ((section ("RomHole_ForCode")));
-
-//Extended logging parameter lookup
-int extendedMode22PIDLookup (void) __attribute__ ((section ("RomHole_ForCode")));
-void getEthanolContentMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
-void getFlexMultiplierMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
-void getFlexLeadingAdderMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
-void getFlexTrailingAdderMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
-void getFuelAirRatioFilteredMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
-void getOLFuelTargetMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
-void getFlexSensorStatusMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
-void can41GROMPack(void) __attribute__ ((section ("RomHole_ForCode")));
-
-//TODO: Move this to end of section
-const Mode22_PID_t extendo_pid[7] __attribute__ ((section ("RomHole_ForPidStruct"))) = 
-{
-	{0x555,0x2,0x0,0xfffe,0x0000,&getEthanolContentMode22},			//0
-	{0x22b,0x2,0x0,0xfffe,0x0000,&getFlexMultiplierMode22},			//1
-	{0x557,0x2,0x0,0xfffe,0x0000,&getFlexLeadingAdderMode22},		//2
-	{0x558,0x2,0x0,0xfffe,0x0000,&getFlexTrailingAdderMode22},		//3
-	{0x559,0x2,0x0,0xfffe,0x0000,&getFuelAirRatioFilteredMode22},	//4
-	{0x55A,0x2,0x0,0xfffe,0x0000,&getOLFuelTargetMode22},			//5
-	{0x55B,0x1,0x0,0xfff1,0x0000,&getFlexSensorStatusMode22}
-};
 
 
 //Main function for simulation
@@ -116,6 +98,7 @@ long alive_count __attribute__ ((section ("RAMHole_forVariables")));
 float fuel_air_ratio_FF __attribute__ ((section ("RAMHole_forVariables")));//16ms update rate ish
 float timing_mult_filtered __attribute__ ((section ("RAMHole_forVariables")));
 float timing_mult_FF __attribute__ ((section ("RAMHole_forVariables")));//16ms update rate ish
+float cranking_fuel_mult __attribute__ ((section ("RAMHole_forVariables")));
 
 
 #ifdef USE_METRIC_CAN_PATCH
@@ -127,10 +110,12 @@ float engine_load_for_can_g_rev __attribute__ ((section ("RAMHole_forVariables")
 
 char flex_can_timeout_counts  __attribute__ ((section ("Flex_CAN_Timeout_Val"))) = 100; //30ms-ish task rate for can timers
 
-
 //Setup patches for new adder pointers 
 long timing_adder_trailing_ptr  __attribute__ ((section ("TrailingPointerPatch"))) = &timing_adder_trailing;
 long timing_adder_leading_ptr __attribute__ ((section ("LeadingPointerPatch")))  = &timing_adder_leading;
+
+//Patch in function address for new cranking injection function
+long cranking_injector_pw_func_ptr __attribute__ ((section ("FlexCrankingInjectorPWPatch")))  = &setCrankingInjectorPulseTime_FlexFuel;
 
 #ifdef USE_METRIC_CAN_PATCH
 long can41TXPackPatch_ptr __attribute__ ((section ("can41TXPackPatch")))  = &can41GROMPack;
@@ -146,10 +131,11 @@ void SetValues()
 	*engine_load_g_rev = 0.02f;
 	*engine_speed_rpm = 1000.0f;
 	*coolant_temp_degC = 1.0f;
-	ethanol_content_pcnt = 15.5f;
+	ethanol_content_pcnt = 71.5f;
 	*coolant_temp_post_fault_detection_degC = 85.0f;
 	*flex_message_byte0 = 0x12;
-
+	*engine_running_bool = 0;
+	*coolant_temp_post_fault_detection_degC = -30.0f;
 }
 
 void delay_ms(unsigned int ms)
@@ -168,22 +154,18 @@ float func(){
 	initFlexFuelCalcs();
 	
 	//NOTE: Dumping shit in here as an init
-	engine_load_for_can_g_rev = *engine_load_g_rev;
-	engine_load_for_metrics_can = 0U;
-	grom_can_tx_patch_tx_count = 0U;
+	//engine_load_for_can_g_rev = *engine_load_g_rev;
+	//engine_load_for_metrics_can = 0U;
+	//grom_can_tx_patch_tx_count = 0U;
 	
 	while(1){
 		SetValues();
-		can41GROMPack();
-		//getFlexMetrics();
+		//can41GROMPack();
 		//flexCANUnpack();	//NOTE: This happens in a different task, but for simulation I guess this is the best I can do..
-
-		//int var = extendedMode22PIDLookup();
-		//i=i+1;
-		//if(i >= 255 && i < 256){
-		//	i=0;
-		//}
-		delay_ms(15);
+		//runFlexFuelCalcs();
+		setCrankingInjectorPulseTime_FlexFuel();
+		//engineControlGetFueling();
+		delay_ms(1);
 	
 
 	}
@@ -221,6 +203,8 @@ void initFlexFuelCalcs(){
 	timing_mult_FF = 0.002;
 	//NOTE: This interface doesn't work and isn't known yet updateFaultStatus(flex_fault_index,FAULTED);
 	flex_can_valid_prevLoop = flex_can_valid;
+	cranking_fuel_mult = 1.0f;
+	
 		
 }
 
@@ -288,6 +272,35 @@ void getFlexMetrics(){
 	timing_mult_filtered = firstOrderFilter_SIG_SIGPREV_MIN_FF(timing_mult,timing_mult_filtered, 0.018f, timing_mult_FF);
 }
 
+void getCrankingFuelMult(){
+	
+	cranking_fuel_mult =  Lookup2d(&ethanol_content_to_cranking_fuel,ethanol_content_pcnt);
+	//Set boundries
+	if(cranking_fuel_mult <= CRANKING_FUEL_MULT_MIN){
+		cranking_fuel_mult = CRANKING_FUEL_MULT_MIN;
+	}
+	else if(cranking_fuel_mult >= CRANKING_FUEL_MULT_MAX){
+		cranking_fuel_mult = CRANKING_FUEL_MULT_MAX;
+	}
+	
+}
+
+void setCrankingInjectorPulseTime_FlexFuel(){
+	//This function will overwrite the OEM function for cranking injector pulse time, so it is a copy of that function with added multipliers
+	
+	if(*engine_running_bool == 0){
+		
+		getCrankingFuelMult(); // Not sure if this is the right place for this, but want to not run this function while engine is running
+		
+		*primary_fuel_injector_pulse_cranking = Lookup2d_unsigned(&oemInjectorCrankingPWTable,*coolant_temp_post_fault_detection_degC);
+		*secondary_fuel_injector_pulse_cranking = 0.0f;
+		
+		//FlexFuel logic
+		*primary_fuel_injector_pulse_cranking = *primary_fuel_injector_pulse_cranking * cranking_fuel_mult;
+		
+	}
+}
+
 
 void flexCANUnpack(){
 	
@@ -317,175 +330,7 @@ void calcTimingAdders(){
 	
 }
 
-
-
-int extendedMode22PIDLookup(){
-	
-	int pid_array_count;
-	char pid_found;
-	int response_length;
-	
-	pid_array_count = 0;
-	pid_found = 0;
-	
-	//G-ROM PID Lookup
-	while(pid_array_count < 7 && pid_found == 0){
-		
-		if(extendo_pid[pid_array_count].pid_id == *uds_pid_data_rx_MAYBE){
-			
-			pid_found = 1;
-	
-			if((extendo_pid[pid_array_count].mem_mask_MAYBE & *pid_AND_val) == 0){
-				
- 				response_length = udsErrorResponse((char)0x22,(char)0x31);
-				
-			}else{
-				if(*pid_id_greaterThan_1byte != (char)0x80){
-					
-					extendUDSDataReponse();
-				}
-				
-				//Run function for PID
-				extendo_pid[pid_array_count].function_ptr((char)0x22);
-	
-				if(*pid_id_greaterThan_1byte == 0){
-				
-					response_length = extendo_pid[pid_array_count].response_length + 3U;
-					
-				}else if(*pid_id_greaterThan_1byte == (char)0xff ){
-					
-					unknownMode22Func(0x22);
-		         	response_length = udsErrorResponse((char)0x22,(char)0x22);
-
-        		}
-			}
-		}
-		
-		pid_array_count++;
-	}
-	
-	pid_array_count = 0;
-	
-	//OEM PID lookup
-	while(pid_array_count < 110 && pid_found == 0){
-		
-		if(stock_pid_man[pid_array_count].pid_id == *uds_pid_data_rx_MAYBE){
-			
-			pid_found = 1;
-	
-			if((stock_pid_man[pid_array_count].mem_mask_MAYBE & *pid_AND_val) == 0){
-				
- 				response_length = udsErrorResponse((char)0x22,(char)0x31);
-				
-			}else{
-				if(*pid_id_greaterThan_1byte != (char)0x80){
-					
-					extendUDSDataReponse();
-				}
-				
-				//Run function for PID
-				stock_pid_man[pid_array_count].function_ptr((char)0x22);
-	
-				if(*pid_id_greaterThan_1byte == 0){
-				
-					response_length = stock_pid_man[pid_array_count].response_length + 3U;
-					
-				}else if(*pid_id_greaterThan_1byte == (char)0xff ){
-					
-					unknownMode22Func(0x22);
-		         	response_length = udsErrorResponse((char)0x22,(char)0x22);
-
-        		}
-			}
-		}
-		
-		pid_array_count++;
-	}
-	
-	if(pid_found == 0){
-		response_length = udsErrorResponse((char)0x22,(char)0x31);
-	}
-
-	return response_length;
-}
-
-
-void getEthanolContentMode22(char service){
-	
-	unsigned int val;
-
-	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(ethanol_content_pcnt,1.0f,0.0f);
-	intToUDS_SERVICE_DATA(service,val);
-	
-}
-
-void getFlexMultiplierMode22(char service){
-	
-	unsigned int val;
-
-	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(timing_mult_filtered,0.0005f,0.0f);
-	intToUDS_SERVICE_DATA(service,val);
-	
-}
-
-void getFlexLeadingAdderMode22(char service){
-	
-	unsigned int val;
-
-	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(timing_adder_leading,0.5f,-50.0f);
-	intToUDS_SERVICE_DATA(service,val);
-	
-}
-
-void getFlexTrailingAdderMode22(char service){
-	
-	unsigned int val;
-
-	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(timing_adder_trailing,0.5f,-50.0f);
-	intToUDS_SERVICE_DATA(service,val);
-	
-}
-
-void getFuelAirRatioFilteredMode22(char service){
-	
-	unsigned int val;
-	
-	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(fuel_air_ratio_filtered,0.0000212f,0.0f);
-	intToUDS_SERVICE_DATA(service,val);
-	
-}
-
-void getOLFuelTargetMode22(char service){
-	
-	unsigned int val;
-	
-	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(*lamda_request_final_ol,0.00003051758f,0.0f);
-	intToUDS_SERVICE_DATA(service,val);
-	
-}
-
-void getFlexSensorStatusMode22(char service){
-	
-	unsigned int val;
-	
-	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET((!flex_can_valid << 8),1,0);	//NOTE: Inverting for ROMraider, and bit shifted for interface. Interface wanted to align to a 16 bit short... I dunno.... do better probably
-	intToUDS_SERVICE_DATA(service,val);
-	
-}
 #ifdef USE_METRIC_CAN_PATCH
-
-void can41GROMGet(){
-	
-	int val = 0U;
-	
-	//TODO: Maybe make scalars variables if used more than once
-	//val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(*engine_load_g_rev,0.003921568f,0.0f);
-	engine_load_for_metrics_can = val;
-	
-	//val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(*baro_compensated_actual_lambda,0.000030517578f,0.0f);
-	//front_o2_lambda_for_metrics_can = val;
-	
-}
 
 void can41GROMPack(){
 

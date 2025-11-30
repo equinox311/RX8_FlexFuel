@@ -89,6 +89,9 @@ SECTIONS
 	Ethanol_Content_Update 0x0001A938 : AT (0x0001A938)
 	{
 	}
+	FlexCrankingInjectorPWPatch 0x00021914 : AT (0x00021914)
+	{
+	}
 	Flex_CAN_216_pase_bypass 0x00029784 : AT (0x00029784)
 	{
 	}
@@ -113,7 +116,7 @@ SECTIONS
 	ExtendedLoggingCodeHole 0x00055E02 : AT (0x00055E02)
 	{
 	}
-	RomHole_ForCode 0x0006B914 : AT (0x0006B914)
+	RomHole_ForCode 0x0006B000 : AT (0x0006B000)
 	{
 		*(.rodata)
 	}

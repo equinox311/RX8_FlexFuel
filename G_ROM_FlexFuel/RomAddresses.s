@@ -7,16 +7,19 @@
 .global _highLevelInit,_initFlexFuelCalcs,_fixedPointToFloat_8bit_MULT_OFF_SIG,_indexLookupSomething, _can216RXParse
 .global _calculateGearRPMbased, _updateFaultStatus, _getMode22PID, _floatToInt_SIGNAL_MULT_OFFSET, _udsErrorResponse,_extendUDSDataReponse
 .global _intToUDS_SERVICE_DATA, _floatToFP_16bit_NUMBER_SCALAR_OFFSET, _unknownMode22Func,_mode22Hanlder,_byteToUDS_SERVICE_DATA
-.global _firstOrderFilter_SIG_SIGPREV_MIN_FF, _txCAN_EventBased, _CANTX_Main, _getMode22EngineLoad
+.global _firstOrderFilter_SIG_SIGPREV_MIN_FF, _txCAN_EventBased, _CANTX_Main, _getMode22EngineLoad, _oemInjectorCrankingPWTable, _Lookup2d_unsigned
+.global _engineControlGetFueling
 
 
 !Function Addresses in ROM variant
 .equ _Lookup3d,                 			0x20DC     
 .equ _Lookup2d,               				0x2068
+.equ _Lookup2d_unsigned,       				0x2068!Using to keep compiler happy with different data types, even though they are pointers that work
 .equ _calculateTrailingTimingBase,			0x1202a
 .equ _calculateLeadingTimingBase,			0x11f78
 !.equ _engineControlCalculateTiming,			0x141fc
 .equ _highLevelInit,						0x1107a	!Only needed for simulation
+.equ _engineControlGetFueling,				0x217b2 !Only needed for simulation
 .equ _fixedPointToFloat_8bit_MULT_OFF_SIG,	0x2500
 .equ _floatToInt_SIGNAL_MULT_OFFSET,		0x24d0
 .equ _floatToFP_16bit_NUMBER_SCALAR_OFFSET, 0x2490
@@ -33,6 +36,8 @@
 .equ _extendUDSDataReponse,					0x55d24
 .equ _txCAN_EventBased,						0x99b0
 .equ _getMode22EngineLoad,					0x53a3a
+.equ _oemInjectorCrankingPWTable,			0x68fcc!Not sure if this is the right place for this
+
 
 !Patched section addresses from linker
 .section Flex_Patch_Address, "ax"

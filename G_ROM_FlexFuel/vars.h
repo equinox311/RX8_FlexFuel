@@ -10,11 +10,11 @@
 #define coolant_temp_post_fault_detection_degC	((float*)0xFFFFA9FC)
 #define ignition_leading_base_final_deg			((float*)0xffffa5ec)
 #define ignition_trailing_base_final_deg		((float*)0xffffa5f0)
-#define uds_pid_data_rx_MAYBE					((short*)0xffffcffe)
-#define pid_AND_val								((short*)0xffffd1c8)
-#define pid_id_greaterThan_1byte				((char *)0xffffcffc)
-#define lamda_request_final_ol					((float*)0xffffbecc)
-#define stock_pid_man							((Mode22_PID_t *)0x5d994)
+#define engine_running_bool						((char*)0xffffa428)
+//Variables for cranking enrichment
+#define primary_fuel_injector_pulse_cranking	((float*)0xffffbea8)
+#define secondary_fuel_injector_pulse_cranking	((float*)0xffffbeac)
+
 
 //CAN 0x216 repurpose
 #define can216rx_byte0		((char*)0xffffbb0c)
@@ -84,16 +84,6 @@ typedef struct {
 
 //CAN STUFF END
 
-//Logging utils
-typedef struct Mode22_PID_t {
-    short pid_id;
-    char response_length;
-	char unknown;
-    short mem_mask_MAYBE;
-	short unknown2;
-    void (*function_ptr)(char) __attribute__((aligned(4)));
-} __attribute__((packed)) Mode22_PID_t;
-
 
 //Table utils
 typedef struct {
@@ -129,27 +119,19 @@ extern LookupTable3D_t timing_ethanol_adder_leading;
 extern LookupTable3D_t timing_ethanol_adder_trailing;
 extern LookupTable2D_Float_t ethanol_content_to_fuel_air_ratio_table_2d;
 extern LookupTable2D_Float_t ethanol_content_to_timing_mult;
+extern LookupTable2D_Float_t ethanol_content_to_cranking_fuel;
+	//OEM Tables for use in software
+extern LookupTable2D_t oemInjectorCrankingPWTable;
 
 //Utils from stock ROM
 extern float fixedPointToFloat_8bit_MULT_OFF_SIG(float multiplier,float offset,int signal);
 extern float Lookup3d(float index_varX, float index_varY,LookupTable3D_t *table_struct);
 extern float Lookup2d(LookupTable2D_Float_t *table_struct2d, float index2d_varX);
+extern float Lookup2d_unsigned(LookupTable2D_t *table_struct2d, float index2d_varX);
 extern void updateFaultStatus(char fault_index,eFaultStatus status);
 extern int floatToFP_16bit_NUMBER_SCALAR_OFFSET(float signal, float multiplier, float offset);
 extern unsigned int floatToFP_NUMBER_SCALAR_OFFSET(float value,float multiplier,float offset);
 extern float firstOrderFilter_SIG_SIGPREV_MIN_FF(float signal, float signal_previous, float signal_min, float signal_filter_contant);
-
-//Logging stuff
-extern void getMode22PID(void);
-		//NOTE: args are enums, too lazy to add it in
-extern int udsErrorResponse(char service, char reponse);
-extern void extendUDSDataReponse(void);
-extern void byteToUDS_SERVICE_DATA(char service, char data);
-extern void intToUDS_SERVICE_DATA(char service, unsigned int data);
-extern long unknownMode22Func(char param);
-extern int mode22Hanlder(void);
-
-
 
 //function calls used as hook replacements that need to be called still
 extern void calculateTrailingTimingBase(void);
