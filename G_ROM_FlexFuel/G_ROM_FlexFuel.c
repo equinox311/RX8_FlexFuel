@@ -79,6 +79,8 @@ void getEthanolContent(void) __attribute__ ((section ("RomHole_ForCode")));
 #ifdef NO_DEBUG
 float func(void) __attribute__ ((section ("RomHole_ForCode")));
 unsigned short i __attribute__ ((section ("RAMHole_forVariables"))) = 0U;
+#define uds_pid_data_rx_MAYBE					((short*)0xffffcffe)
+#define pid_AND_val								((short*)0xffffd1c8)
 #endif
 
 const float ethanol_content_sample_thresh_rpm __attribute__ ((section ("RomHole_calibrations"))) = 11000.0f;		//Default off
@@ -136,6 +138,9 @@ void SetValues()
 	*flex_message_byte0 = 0x12;
 	*engine_running_bool = 0;
 	*coolant_temp_post_fault_detection_degC = -30.0f;
+	//UDS Sim
+	*uds_pid_data_rx_MAYBE = 0x55C;
+	*pid_AND_val = 0x1234;
 }
 
 void delay_ms(unsigned int ms)
@@ -163,7 +168,8 @@ float func(){
 		//can41GROMPack();
 		//flexCANUnpack();	//NOTE: This happens in a different task, but for simulation I guess this is the best I can do..
 		//runFlexFuelCalcs();
-		setCrankingInjectorPulseTime_FlexFuel();
+		//setCrankingInjectorPulseTime_FlexFuel();
+		extendedMode22PIDLookup();
 		//engineControlGetFueling();
 		delay_ms(1);
 	

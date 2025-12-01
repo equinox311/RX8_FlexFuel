@@ -129,8 +129,6 @@ extern float Lookup3d(float index_varX, float index_varY,LookupTable3D_t *table_
 extern float Lookup2d(LookupTable2D_Float_t *table_struct2d, float index2d_varX);
 extern float Lookup2d_unsigned(LookupTable2D_t *table_struct2d, float index2d_varX);
 extern void updateFaultStatus(char fault_index,eFaultStatus status);
-extern int floatToFP_16bit_NUMBER_SCALAR_OFFSET(float signal, float multiplier, float offset);
-extern unsigned int floatToFP_NUMBER_SCALAR_OFFSET(float value,float multiplier,float offset);
 extern float firstOrderFilter_SIG_SIGPREV_MIN_FF(float signal, float signal_previous, float signal_min, float signal_filter_contant);
 
 //function calls used as hook replacements that need to be called still

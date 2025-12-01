@@ -1,13 +1,13 @@
 #include "pid_handler.h"
 
 //Vars from FlexFuel
-extern ethanol_content_pcnt;
-extern timing_mult_filtered;
-extern timing_adder_leading;
-extern timing_adder_trailing;
-extern fuel_air_ratio_filtered;
-extern flex_can_valid;
-extern cranking_fuel_mult;
+extern float ethanol_content_pcnt;
+extern float timing_mult_filtered;
+extern float timing_adder_leading;
+extern float timing_adder_trailing;
+extern float fuel_air_ratio_filtered;
+extern char flex_can_valid;
+extern float cranking_fuel_mult;
 
 int extendedMode22PIDLookup(){
 	

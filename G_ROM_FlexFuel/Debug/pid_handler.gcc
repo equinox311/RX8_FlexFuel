@@ -1,0 +1,13 @@
+-c -x c
+-m4
+-mb
+-mrenesas
+-I "c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\sh-elf\optlibinc"
+-I "c:\program files (x86)\renesas\hew\tools\kpit\gnush-elf\v13.01\sh-elf\lib\gcc\sh-elf\4.7-GNUSH_v13.01\optlibinc"
+-D DEBUG
+-nostdinc
+-finline-functions
+"C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\pid_handler.c"
+-g
+-g2
+-o "C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\pid_handler.o"
