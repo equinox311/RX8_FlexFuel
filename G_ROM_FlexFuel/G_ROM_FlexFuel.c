@@ -287,13 +287,13 @@ void setCrankingInjectorPulseTime_FlexFuel(){
 	
 	if(*engine_running_bool == 0){
 		
-		getCrankingFuelMult(); // Not sure if this is the right place for this, but want to not run this function while engine is running
+		//getCrankingFuelMult(); // Not sure if this is the right place for this, but want to not run this function while engine is running
 		
 		*primary_fuel_injector_pulse_cranking = Lookup2d_unsigned(&oemInjectorCrankingPWTable,*coolant_temp_post_fault_detection_degC);
 		*secondary_fuel_injector_pulse_cranking = 0.0f;
 		
 		//FlexFuel logic
-		*primary_fuel_injector_pulse_cranking = *primary_fuel_injector_pulse_cranking * cranking_fuel_mult;
+		//*primary_fuel_injector_pulse_cranking = *primary_fuel_injector_pulse_cranking * cranking_fuel_mult;
 		
 	}
 }
