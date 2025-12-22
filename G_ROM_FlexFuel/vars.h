@@ -16,6 +16,7 @@
 #define secondary_fuel_injector_pulse_cranking	((float*)0xffffbeac)
 
 
+
 //CAN 0x216 repurpose
 #define can216rx_byte0		((char*)0xffffbb0c)
 #define can216rx_byte1		((char*)0xffffbb0d)
@@ -119,7 +120,7 @@ extern LookupTable3D_t timing_ethanol_adder_leading;
 extern LookupTable3D_t timing_ethanol_adder_trailing;
 extern LookupTable2D_Float_t ethanol_content_to_fuel_air_ratio_table_2d;
 extern LookupTable2D_Float_t ethanol_content_to_timing_mult;
-extern LookupTable2D_Float_t ethanol_content_to_cranking_fuel;
+extern LookupTable3D_t ethanol_content_to_cranking_fuel_3d;
 	//OEM Tables for use in software
 extern LookupTable2D_t oemInjectorCrankingPWTable;
 
@@ -130,6 +131,7 @@ extern float Lookup2d(LookupTable2D_Float_t *table_struct2d, float index2d_varX)
 extern float Lookup2d_unsigned(LookupTable2D_t *table_struct2d, float index2d_varX);
 extern void updateFaultStatus(char fault_index,eFaultStatus status);
 extern float firstOrderFilter_SIG_SIGPREV_MIN_FF(float signal, float signal_previous, float signal_min, float signal_filter_contant);
+extern float saturate_SIGNAL_LOWER_UPPER(float signal, float lower, float upper);
 
 //function calls used as hook replacements that need to be called still
 extern void calculateTrailingTimingBase(void);

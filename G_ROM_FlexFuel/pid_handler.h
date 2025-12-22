@@ -6,6 +6,7 @@
 #define pid_id_greaterThan_1byte				((char *)0xffffcffc)
 #define lamda_request_final_ol					((float*)0xffffbecc)
 #define stock_pid_man							((Mode22_PID_t *)0x5d994)
+#define cold_start_enrichment					((float*)0xffffb120)
 
 extern void getMode22PID(void);
 		//NOTE: args are enums, too lazy to add it in
@@ -39,10 +40,11 @@ void getFuelAirRatioFilteredMode22(char service) __attribute__ ((section ("RomHo
 void getOLFuelTargetMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
 void getFlexSensorStatusMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
 void getFlexCrankingMultMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
+void getColdStartEnrichmentMode22(char service) __attribute__ ((section ("RomHole_ForCode")));
 //void can41GROMPack(void) __attribute__ ((section ("RomHole_ForCode")));
 
 //TODO: Move this to end of section
-const Mode22_PID_t extendo_pid[8] __attribute__ ((section ("RomHole_ForPidStruct"))) = 
+const Mode22_PID_t extendo_pid[9] __attribute__ ((section ("RomHole_ForPidStruct"))) = 
 {
 	{0x555,0x2,0x0,0xfffe,0x0000,&getEthanolContentMode22},			//0
 	{0x22b,0x2,0x0,0xfffe,0x0000,&getFlexMultiplierMode22},			//1
@@ -51,5 +53,6 @@ const Mode22_PID_t extendo_pid[8] __attribute__ ((section ("RomHole_ForPidStruct
 	{0x559,0x2,0x0,0xfffe,0x0000,&getFuelAirRatioFilteredMode22},	//4
 	{0x55A,0x2,0x0,0xfffe,0x0000,&getOLFuelTargetMode22},			//5
 	{0x55B,0x1,0x0,0xfff1,0x0000,&getFlexSensorStatusMode22},		//6		
-	{0x55C,0x2,0x0,0xfffe,0x0000,&getFlexCrankingMultMode22}		//7
+	{0x55C,0x2,0x0,0xfffe,0x0000,&getFlexCrankingMultMode22},		//7
+	{0x55D,0x2,0x0,0xfffe,0x0000,&getColdStartEnrichmentMode22}		//8
 };

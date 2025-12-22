@@ -8,7 +8,7 @@
 .global _calculateGearRPMbased, _updateFaultStatus, _getMode22PID, _floatToInt_SIGNAL_MULT_OFFSET, _udsErrorResponse,_extendUDSDataReponse
 .global _intToUDS_SERVICE_DATA, _floatToFP_16bit_NUMBER_SCALAR_OFFSET, _unknownMode22Func,_mode22Hanlder,_byteToUDS_SERVICE_DATA
 .global _firstOrderFilter_SIG_SIGPREV_MIN_FF, _txCAN_EventBased, _CANTX_Main, _getMode22EngineLoad, _oemInjectorCrankingPWTable, _Lookup2d_unsigned
-.global _engineControlGetFueling
+.global _engineControlGetFueling, _saturate_SIGNAL_LOWER_UPPER
 
 
 !Function Addresses in ROM variant
@@ -31,6 +31,7 @@
 .equ _unknownMode22Func,					0x66aaa
 .equ _mode22Hanlder,						0x54b72
 .equ _firstOrderFilter_SIG_SIGPREV_MIN_FF,	0x23b0
+.equ _saturate_SIGNAL_LOWER_UPPER,			0x2404
 .equ _getMode22PID,							0x55c14
 .equ _udsErrorResponse,						0x52a5a
 .equ _extendUDSDataReponse,					0x55d24

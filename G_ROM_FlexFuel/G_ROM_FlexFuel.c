@@ -74,7 +74,7 @@ void getEthanolContent(void) __attribute__ ((section ("RomHole_ForCode")));
 
 //Main function for simulation
 
-//#define NO_DEBUG
+#define NO_DEBUG
 
 #ifdef NO_DEBUG
 float func(void) __attribute__ ((section ("RomHole_ForCode")));
@@ -130,14 +130,13 @@ void SetValues() __attribute__ ((section ("Misc")));
 void SetValues() 
 {
 	
-	*engine_load_g_rev = 0.02f;
-	*engine_speed_rpm = 1000.0f;
+	*engine_load_g_rev = 0.04f;
+	*engine_speed_rpm = 0.0f;
 	*coolant_temp_degC = 1.0f;
-	ethanol_content_pcnt = 71.5f;
-	*coolant_temp_post_fault_detection_degC = 85.0f;
+	ethanol_content_pcnt = 100.0f;
 	*flex_message_byte0 = 0x12;
 	*engine_running_bool = 0;
-	*coolant_temp_post_fault_detection_degC = -30.0f;
+	*coolant_temp_post_fault_detection_degC = -35.0f;
 	//UDS Sim
 	*uds_pid_data_rx_MAYBE = 0x55C;
 	*pid_AND_val = 0x1234;
@@ -165,11 +164,13 @@ float func(){
 	
 	while(1){
 		SetValues();
+		setCrankingInjectorPulseTime_FlexFuel();
+		//calcTimingAdders();
 		//can41GROMPack();
 		//flexCANUnpack();	//NOTE: This happens in a different task, but for simulation I guess this is the best I can do..
 		//runFlexFuelCalcs();
 		//setCrankingInjectorPulseTime_FlexFuel();
-		extendedMode22PIDLookup();
+		//extendedMode22PIDLookup();
 		//engineControlGetFueling();
 		delay_ms(1);
 	
@@ -246,12 +247,7 @@ void getEthanolContent(){
 	
 	
 	//Set boundries
-	if(ethanol_content_pcnt <= ETHANOL_CONTENT_MIN){
-		ethanol_content_pcnt = ETHANOL_CONTENT_MIN;
-	}
-	else if(ethanol_content_pcnt >= ETHANOL_CONTENT_MAX){
-		ethanol_content_pcnt = ETHANOL_CONTENT_MAX;
-	}
+	saturate_SIGNAL_LOWER_UPPER(ethanol_content_pcnt,ETHANOL_CONTENT_MIN,ETHANOL_CONTENT_MAX);
 	
 	//get data			NOTE: TODO: May want to move this elsewhere
 	getFlexMetrics();
@@ -280,15 +276,10 @@ void getFlexMetrics(){
 
 void getCrankingFuelMult(){
 	
-	cranking_fuel_mult =  Lookup2d(&ethanol_content_to_cranking_fuel,ethanol_content_pcnt);
+	cranking_fuel_mult =  Lookup3d(ethanol_content_pcnt,*coolant_temp_post_fault_detection_degC,&ethanol_content_to_cranking_fuel_3d);
+
 	//Set boundries
-	if(cranking_fuel_mult <= CRANKING_FUEL_MULT_MIN){
-		cranking_fuel_mult = CRANKING_FUEL_MULT_MIN;
-	}
-	else if(cranking_fuel_mult >= CRANKING_FUEL_MULT_MAX){
-		cranking_fuel_mult = CRANKING_FUEL_MULT_MAX;
-	}
-	
+	saturate_SIGNAL_LOWER_UPPER(cranking_fuel_mult,CRANKING_FUEL_MULT_MIN,CRANKING_FUEL_MULT_MAX);
 }
 
 void setCrankingInjectorPulseTime_FlexFuel(){

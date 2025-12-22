@@ -126,24 +126,44 @@ _e_timing_trailing_data:
 	.byte 100,100,100,100,100,102,104,106,107,107,110,110,110,107,117,117,117,117,117,117
 	.byte 100,100,100,100,100,102,104,106,107,107,110,110,106,113,117,117,117,117,117,117
 	.byte 100,100,100,100,100,102,104,106,107,107,110,110,106,113,117,117,117,117,117,117
-	
 
-!Cranking Fueling multiplier table based on e content
-.global _ethanol_content_to_cranking_fuel
-.global _ethanol_content_x_for_cranking_mult
+
+!3D Cranking Fueling multiplier table based on E content and Water temp
+.global _ethanol_content_to_cranking_fuel_3d
+.global _ethanol_content_for_cranking_mult_x
+.global _coolant_temp_for_cranking_y
 .global _cranking_fuel_mult_tbl
 
-_ethanol_content_to_cranking_fuel:
-	.short 12									!12 rows Ethanol Content
-	.short 0x0000								! float data type
-	.long _ethanol_content_x_for_cranking_mult
-	.long _cranking_fuel_mult_tbl
+_ethanol_content_to_cranking_fuel_3d:
+	.short 12										!Columns 
+	.short 13										!Rows 
+	.long _ethanol_content_for_cranking_mult_x		!Column Data
+	.long _coolant_temp_for_cranking_y				!Row Data
+	.long _cranking_fuel_mult_tbl					!Table Data
+	.long 0x04000000								!8 bit data
+	.float 0.1										!mult
+	.float 1										!offset
 
-_ethanol_content_x_for_cranking_mult:
+_ethanol_content_for_cranking_mult_x:
 	.float 0.0, 5.0, 10.0, 15.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 85.0, 100.0
 
+_coolant_temp_for_cranking_y:
+	.float -30.0,-25.0,-20.0,-10.0,0.0,10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0
+
 _cranking_fuel_mult_tbl:
-	.float 1.00,1.00,1.00,1.00,1.10,1.20,1.30,1.40,1.50,1.60,1.60,1.60
+	.byte 0xDE,0,0,0,0,0,0,0,0,0,0,0xAA
+	.byte 0,0,0,0,0,0,0,0,0,0,0,0
+	.byte 0,0,0,0,0,0,0,0,0,0,0,0
+	.byte 0,0,0,0,0,0,0,0,0,0,0,0
+	.byte 0,0,0,0,0,0,0,0,0,0,0,0
+	.byte 0,0,0,0,0,0,0,0,0,0,0,0
+	.byte 0,0,0,0,0,0,0,0,0,0,0,0
+	.byte 0,0,0,0,0,0,0,0,0,0,0,0
+	.byte 0,0,0,0,0,0,0,0,0,0,0,0
+	.byte 0,0,0,0,0,0,0,0,0,0,0,0
+	.byte 0,0,0,0,0,0,0,0,0,0,0,0
+	.byte 0,0,0,0,0,0,0,0,0,0,0,0
+	.byte 0xAD,0,0,0,0,0,0,0,0,0,0,0x55
 
 
 .end

@@ -11,15 +11,15 @@ extern float cranking_fuel_mult;
 
 int extendedMode22PIDLookup(){
 	
-	int pid_array_count;
+	unsigned char pid_array_count;
 	char pid_found;
-	int response_length;
+	unsigned int response_length;
 	
 	pid_array_count = 0;
 	pid_found = 0;
 	
 	//G-ROM PID Lookup
-	while(pid_array_count < 8 && pid_found == 0){
+	while(pid_array_count < 9 && pid_found == 0){
 		
 		if(extendo_pid[pid_array_count].pid_id == *uds_pid_data_rx_MAYBE){
 			
@@ -168,6 +168,15 @@ void getFlexCrankingMultMode22(char service){
 	unsigned int val;
 	
 	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(cranking_fuel_mult,0.01f,0.0f);
+	intToUDS_SERVICE_DATA(service,val);
+	
+}
+
+void getColdStartEnrichmentMode22(char service){
+	
+	unsigned int val;
+	
+	val = floatToFP_16bit_NUMBER_SCALAR_OFFSET(*cold_start_enrichment,0.01f,0.0f);
 	intToUDS_SERVICE_DATA(service,val);
 	
 }
