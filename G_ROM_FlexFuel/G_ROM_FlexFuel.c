@@ -284,8 +284,6 @@ void getCrankingFuelMult(){
 
 void setCrankingInjectorPulseTime_FlexFuel(){
 	//This function will overwrite the OEM function for cranking injector pulse time, so it is a copy of that function with added multipliers
-	static float var1 = 0.0f;
-	static float var2 = 0.0f;
 	
 	if(*engine_running_bool == 0){
 		
@@ -293,13 +291,9 @@ void setCrankingInjectorPulseTime_FlexFuel(){
 		
 		*primary_fuel_injector_pulse_cranking = Lookup2d_unsigned(&oemInjectorCrankingPWTable,*coolant_temp_post_fault_detection_degC);
 		*secondary_fuel_injector_pulse_cranking = 0.0f;
-		var1 = *primary_fuel_injector_pulse_cranking;
 		
 		//FlexFuel logic
-		var2 = *primary_fuel_injector_pulse_cranking * cranking_fuel_mult;
 		*primary_fuel_injector_pulse_cranking = *primary_fuel_injector_pulse_cranking * cranking_fuel_mult;
-		
-
 		
 	}
 }
