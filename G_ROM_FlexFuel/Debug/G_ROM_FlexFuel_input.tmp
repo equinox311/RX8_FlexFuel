@@ -1,4 +1,3 @@
-INPUT("C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\simulation_handlers.o")
 INPUT("C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\RomAddresses.o")
 INPUT("C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\pid_handler.o")
 INPUT("C:\WorkSpace\G_ROM_FlexFuel\G_ROM_FlexFuel\Debug\G_ROM_FlexFuel.o")

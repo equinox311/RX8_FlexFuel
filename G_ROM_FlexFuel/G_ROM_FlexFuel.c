@@ -74,7 +74,7 @@ void getEthanolContent(void) __attribute__ ((section ("RomHole_ForCode")));
 
 //Main function for simulation
 
-#define NO_DEBUG
+//#define NO_DEBUG
 
 #ifdef NO_DEBUG
 float func(void) __attribute__ ((section ("RomHole_ForCode")));
@@ -83,8 +83,8 @@ unsigned short i __attribute__ ((section ("RAMHole_forVariables"))) = 0U;
 #define pid_AND_val								((short*)0xffffd1c8)
 #endif
 
-const float ethanol_content_sample_thresh_rpm __attribute__ ((section ("RomHole_calibrations"))) = 11000.0f;		//Default off
 const float ethanol_content_sample_thresh_load __attribute__ ((section ("RomHole_calibrations"))) = 2.750f;			//Default off
+const float ethanol_content_sample_thresh_rpm __attribute__ ((section ("RomHole_calibrations"))) = 11000.0f;		//Default off
 
 //TODO: These need to not be random RAM vars
 float fuel_air_ratio __attribute__ ((section ("RAMHole_forVariables"))); 
@@ -247,7 +247,7 @@ void getEthanolContent(){
 	
 	
 	//Set boundries
-	saturate_SIGNAL_LOWER_UPPER(ethanol_content_pcnt,ETHANOL_CONTENT_MIN,ETHANOL_CONTENT_MAX);
+	ethanol_content_pcnt = saturate_SIGNAL_LOWER_UPPER(ethanol_content_pcnt,ETHANOL_CONTENT_MIN,ETHANOL_CONTENT_MAX);
 	
 	//get data			NOTE: TODO: May want to move this elsewhere
 	getFlexMetrics();
@@ -279,21 +279,27 @@ void getCrankingFuelMult(){
 	cranking_fuel_mult =  Lookup3d(ethanol_content_pcnt,*coolant_temp_post_fault_detection_degC,&ethanol_content_to_cranking_fuel_3d);
 
 	//Set boundries
-	saturate_SIGNAL_LOWER_UPPER(cranking_fuel_mult,CRANKING_FUEL_MULT_MIN,CRANKING_FUEL_MULT_MAX);
+	cranking_fuel_mult = saturate_SIGNAL_LOWER_UPPER(cranking_fuel_mult,CRANKING_FUEL_MULT_MIN,CRANKING_FUEL_MULT_MAX);
 }
 
 void setCrankingInjectorPulseTime_FlexFuel(){
 	//This function will overwrite the OEM function for cranking injector pulse time, so it is a copy of that function with added multipliers
+	static float var1 = 0.0f;
+	static float var2 = 0.0f;
 	
 	if(*engine_running_bool == 0){
 		
-		//getCrankingFuelMult(); // Not sure if this is the right place for this, but want to not run this function while engine is running
+		getCrankingFuelMult(); // Not sure if this is the right place for this, but want to not run this function while engine is running
 		
 		*primary_fuel_injector_pulse_cranking = Lookup2d_unsigned(&oemInjectorCrankingPWTable,*coolant_temp_post_fault_detection_degC);
 		*secondary_fuel_injector_pulse_cranking = 0.0f;
+		var1 = *primary_fuel_injector_pulse_cranking;
 		
 		//FlexFuel logic
-		//*primary_fuel_injector_pulse_cranking = *primary_fuel_injector_pulse_cranking * cranking_fuel_mult;
+		var2 = *primary_fuel_injector_pulse_cranking * cranking_fuel_mult;
+		*primary_fuel_injector_pulse_cranking = *primary_fuel_injector_pulse_cranking * cranking_fuel_mult;
+		
+
 		
 	}
 }
