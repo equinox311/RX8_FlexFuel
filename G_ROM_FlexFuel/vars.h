@@ -132,6 +132,7 @@ extern float Lookup2d_unsigned(LookupTable2D_t *table_struct2d, float index2d_va
 extern void updateFaultStatus(char fault_index,eFaultStatus status);
 extern float firstOrderFilter_SIG_SIGPREV_MIN_FF(float signal, float signal_previous, float signal_min, float signal_filter_contant);
 extern float saturate_SIGNAL_LOWER_UPPER(float signal, float lower, float upper);
+extern float subtractAbsolute(float signal, float subtractor);
 
 //function calls used as hook replacements that need to be called still
 extern void calculateTrailingTimingBase(void);

@@ -95,11 +95,9 @@ float timing_adder_leading  __attribute__ ((section ("RAMHole_forVariables")));
 float ethanol_content_pcnt __attribute__ ((section ("RAMHole_forVariables")));
 float ethanol_content_last_valid_pcnt __attribute__ ((section ("RAMHole_forVariables")));
 char flex_can_valid __attribute__ ((section ("RAMHole_forVariables")));
-char flex_can_valid_prevLoop __attribute__ ((section ("RAMHole_forVariables")));
-long alive_count __attribute__ ((section ("RAMHole_forVariables")));
-float fuel_air_ratio_FF __attribute__ ((section ("RAMHole_forVariables")));//16ms update rate ish
+//float fuel_air_ratio_FF __attribute__ ((section ("RAMHole_forVariables")));//16ms update rate ish
 float timing_mult_filtered __attribute__ ((section ("RAMHole_forVariables")));
-float timing_mult_FF __attribute__ ((section ("RAMHole_forVariables")));//16ms update rate ish
+//float timing_mult_FF __attribute__ ((section ("RAMHole_forVariables")));//16ms update rate ish
 float cranking_fuel_mult __attribute__ ((section ("RAMHole_forVariables")));
 
 
@@ -110,6 +108,7 @@ int engine_load_for_metrics_can __attribute__ ((section ("RAMHole_forVariables")
 float engine_load_for_can_g_rev __attribute__ ((section ("RAMHole_forVariables")));
 #endif
 
+//Timeout calibration for CAN message
 char flex_can_timeout_counts  __attribute__ ((section ("Flex_CAN_Timeout_Val"))) = 100; //30ms-ish task rate for can timers
 
 //Setup patches for new adder pointers 
@@ -164,8 +163,8 @@ float func(){
 	
 	while(1){
 		SetValues();
-		setCrankingInjectorPulseTime_FlexFuel();
-		//calcTimingAdders();
+		getEthanolContent();
+		calcTimingAdders();
 		//can41GROMPack();
 		//flexCANUnpack();	//NOTE: This happens in a different task, but for simulation I guess this is the best I can do..
 		//runFlexFuelCalcs();
@@ -184,35 +183,44 @@ float func(){
 #endif
 
 
-void runFlexFuelCalcs(){
-	
-	
-	calcTimingAdders();
-	
-	//Run the function we hijacked
-	calculateLeadingTimingBase();
-
-}
-
 
 void initFlexFuelCalcs(){
 	
 	fuel_air_ratio = BASE_FUEL_AIR_RATIO;
-	fuel_air_ratio_filtered = fuel_air_ratio;
+	fuel_air_ratio_filtered = BASE_FUEL_AIR_RATIO;
 	timing_mult = 0.0f;
+	timing_mult_filtered = 0.0f;
 	timing_adder_trailing = 0.0f;
 	timing_adder_leading = 0.0f;
 	ethanol_content_pcnt = 15.0f;
-	ethanol_content_last_valid_pcnt = ethanol_content_pcnt;
+	ethanol_content_last_valid_pcnt = 15.0f;
 	flex_can_valid = 0;
-	alive_count = 0U;
-	fuel_air_ratio_FF = 0.002;
-	timing_mult_FF = 0.002;
+	//fuel_air_ratio_FF = 0.002;
+	//timing_mult_FF = 0.002;
 	//NOTE: This interface doesn't work and isn't known yet updateFaultStatus(flex_fault_index,FAULTED);
-	flex_can_valid_prevLoop = flex_can_valid;
-	cranking_fuel_mult = 1.0f;
+	cranking_fuel_mult = 1.0f;	
+}
+
+void getFlexMetrics(){
 	
-		
+	//This is called in a 16ms task rate in the ECU
+	
+	if((*engine_speed_rpm > ethanol_content_sample_thresh_rpm) || (*engine_load_g_rev > ethanol_content_sample_thresh_load)){
+		//Do not update fueling or timing variables
+	}else{
+		fuel_air_ratio = Lookup2d(&ethanol_content_to_fuel_air_ratio_table_2d,ethanol_content_pcnt);
+		timing_mult = Lookup2d(&ethanol_content_to_timing_mult,ethanol_content_pcnt);
+	}
+	
+	//NOTE: Should probably turn into a ethanol content filter instead of filtering both signals
+	fuel_air_ratio_filtered = firstOrderFilter_SIG_SIGPREV_MIN_FF(fuel_air_ratio,fuel_air_ratio_filtered, 0.018f,  0.002);
+	
+	//Limits set to the E0 and E100 values
+	fuel_air_ratio_filtered = saturate_SIGNAL_LOWER_UPPER(fuel_air_ratio_filtered,0.068128f,0.111383f);
+	
+	timing_mult_filtered = firstOrderFilter_SIG_SIGPREV_MIN_FF(timing_mult,timing_mult_filtered, 0.018f,  0.002);
+	//Added limiter for filtered signal
+	timing_mult_filtered = saturate_SIGNAL_LOWER_UPPER(timing_mult_filtered,0.0f,1.0f);
 }
 
 void getEthanolContent(){
@@ -228,7 +236,7 @@ void getEthanolContent(){
 	
 	if(flex_can_valid){
 		
-		ethanol_content_pcnt = fixedPointToFloat_8bit_MULT_OFF_SIG(1.0f,0.0f,(int)*can216rx_byte0);
+		ethanol_content_pcnt = fixedPointToFloat_8bit_MULT_OFF_SIG(1.0f,0.0f,*can216rx_byte0);
 		ethanol_content_last_valid_pcnt = ethanol_content_pcnt;
 		
 	}else{
@@ -245,7 +253,6 @@ void getEthanolContent(){
 		
 	}
 	
-	
 	//Set boundries
 	ethanol_content_pcnt = saturate_SIGNAL_LOWER_UPPER(ethanol_content_pcnt,ETHANOL_CONTENT_MIN,ETHANOL_CONTENT_MAX);
 	
@@ -254,25 +261,30 @@ void getEthanolContent(){
 	//Run the function we hijacked
 	calculateGearRPMbased();
 	
-	flex_can_valid_prevLoop = flex_can_valid;
+}
+
+void calcTimingAdders(){
+	
+	//Trailing
+	timing_adder_trailing = Lookup3d(*engine_load_g_rev,*engine_speed_rpm,&timing_ethanol_adder_trailing);
+	timing_adder_trailing = timing_adder_trailing * timing_mult_filtered;
+		
+	//Leading
+	timing_adder_leading = Lookup3d(*engine_load_g_rev,*engine_speed_rpm,&timing_ethanol_adder_leading);
+	timing_adder_leading = timing_adder_leading * timing_mult_filtered;
 	
 }
 
-void getFlexMetrics(){
+void runFlexFuelCalcs(){
 	
-	//This is called in a ~16ms task rate in the ECU
 	
-	if((*engine_speed_rpm > ethanol_content_sample_thresh_rpm) || (*engine_load_g_rev > ethanol_content_sample_thresh_load)){
-		//Do not update fueling or timing variables
-	}else{
-		fuel_air_ratio = Lookup2d(&ethanol_content_to_fuel_air_ratio_table_2d,ethanol_content_pcnt);
-		timing_mult = Lookup2d(&ethanol_content_to_timing_mult,ethanol_content_pcnt);
-	}
+	calcTimingAdders();
 	
-	//NOTE: Should probably turn into a ethanol content filter instead of filtering both signals
-	fuel_air_ratio_filtered = firstOrderFilter_SIG_SIGPREV_MIN_FF(fuel_air_ratio,fuel_air_ratio_filtered, 0.018f, fuel_air_ratio_FF);
-	timing_mult_filtered = firstOrderFilter_SIG_SIGPREV_MIN_FF(timing_mult,timing_mult_filtered, 0.018f, timing_mult_FF);
+	//Run the function we hijacked
+	calculateLeadingTimingBase();
+
 }
+
 
 void getCrankingFuelMult(){
 	
@@ -307,25 +319,16 @@ void flexCANUnpack(){
 	*can216rx_byte1 = *flex_message_byte1;
 	*can216rx_byte2 = *flex_message_byte2;
 	
-	return;
 	
-	//This function needs to be filled with something in the factory ROM, or else there is dead code running around
-	//In theory not an issue, but...
-	
-
-}
-
-void calcTimingAdders(){
-	
-	//Trailing
-	timing_adder_trailing = Lookup3d(*engine_load_g_rev,*engine_speed_rpm,&timing_ethanol_adder_trailing);
-	timing_adder_trailing = timing_adder_trailing * timing_mult_filtered;
-		
-	//Leading
-	timing_adder_leading = Lookup3d(*engine_load_g_rev,*engine_speed_rpm,&timing_ethanol_adder_leading);
-	timing_adder_leading = timing_adder_leading * timing_mult_filtered;
+	//Inline ASM required for proper return to OEM function calls
+	__asm__ ("rts \n"
+			"nop");
+			
+	__builtin_unreachable();
 	
 }
+
+
 
 #ifdef USE_METRIC_CAN_PATCH
 

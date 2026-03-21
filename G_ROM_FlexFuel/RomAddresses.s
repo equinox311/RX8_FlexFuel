@@ -38,24 +38,27 @@
 .equ _txCAN_EventBased,						0x99b0
 .equ _getMode22EngineLoad,					0x53a3a
 .equ _oemInjectorCrankingPWTable,			0x68fcc!Not sure if this is the right place for this
+.equ _subtractAbsolute,						0x23dc
 
 
 !Patched section addresses from linker
 .section Flex_Patch_Address, "ax"
-.long _runFlexFuelCalcs
+	.long _runFlexFuelCalcs
 
 .section Flex_Init_Address,"ax"
-.long _initFlexFuelCalcs
+	.long _initFlexFuelCalcs
 
 .section Ethanol_Content_Update,"ax"
-.long _getEthanolContent
-
-!This turns the function call for the OEM 0x216 CAN RX into a no op, so we don't parse data into a section of RAM we can't use
-.section Flex_CAN_216_pase_bypass,"ax"
-	nop
+	.long _getEthanolContent
 
 .section Flex_Patch_FuelAirRatio, "ax"
 	.long _fuel_air_ratio_filtered
+	
+!Patch for removing OEM CAN 0x216 parsing
+.section Flex_CAN_216_pase_bypass, "ax"
+	nop
+
+
 	
 .section ExtendedLoggingPatch, "ax" !0x55d08 OLD 					!54C44 for no patch
 	.long _extendedMode22PIDLookup
