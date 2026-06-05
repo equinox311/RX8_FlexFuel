@@ -321,10 +321,10 @@ void flexCANUnpack(){
 	
 	
 	//Inline ASM required for proper return to OEM function calls
-	__asm__ ("rts \n"
-			"nop");
+	//__asm__ ("rts \n"
+	//		"nop");
 			
-	__builtin_unreachable();
+	//__builtin_unreachable();
 	
 }
 
